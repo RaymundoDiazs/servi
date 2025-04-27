@@ -218,7 +218,7 @@ if (depositPoint && entregando) {
 
   useEffect(() => {
     if (location.pathname !== "/") return;
-    const projectCard = document.querySelector(".MuiGrid-item");
+    const projectCard = document.querySelector(".card");
     if (projectCard) {
       const rect = projectCard.getBoundingClientRect();
       const scrollTop = window.scrollY || window.pageYOffset;
@@ -231,7 +231,7 @@ if (depositPoint && entregando) {
   useEffect(() => {
     if (location.pathname !== "/") return;
 
-    const cards = document.querySelectorAll(".MuiGrid-item");
+    const cards = document.querySelectorAll(".card");
 
     const handleMouseEnter = (e) => {
       const rect = e.currentTarget.getBoundingClientRect();

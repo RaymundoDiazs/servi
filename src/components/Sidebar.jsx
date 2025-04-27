@@ -1,6 +1,5 @@
 import React from "react";
-import { Drawer, List, ListItem, ListItemText, Box } from "@mui/material";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 const Sidebar = () => {
@@ -9,7 +8,7 @@ const Sidebar = () => {
   const handleNavigation = (text) => {
     switch (text) {
       case "Proyectos Overview":
-        navigate("/"); 
+        navigate("/");
         break;
       case "Respuestas Alumnos":
         navigate("/respuesta_alumnos");
@@ -26,39 +25,31 @@ const Sidebar = () => {
   };
 
   return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: 240,
-        [`& .MuiDrawer-paper`]: {
-          width: 240,
-          boxSizing: "border-box",
-          backgroundColor: "#ffffff",
-          borderRight: "1px solid #e0e0e0",
-          position: "relative"
-        }
-      }}
-    >
-      {/*title*/}
-      <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
-        <img src="/logoservicio.png" alt="Logo" style={{ height: 32 }} />
-        <span style={{ fontWeight: "bold", fontSize: 18 }}>Servicio Social</span>
-      </Box>
+    <div className="sidebar">
+      {/* Sidebar Header */}
+      <div className="sidebar-header">
+        <img src="/logoservicio.png" alt="Logo" className="sidebar-logo" />
+        <span className="sidebar-title">Servicio Social</span>
+      </div>
 
-      {/*list elementos*/}
-      <List>
+      {/* Navigation List */}
+      <ul className="sidebar-list">
         {["Proyectos Overview", "Respuestas Alumnos", "Proyectos a revisar", "Exportar"].map(
           (text) => (
-            <ListItem button key={text} onClick={() => handleNavigation(text)}>
-              <ListItemText primary={text} />
-            </ListItem>
+            <li
+              key={text}
+              className="sidebar-item"
+              onClick={() => handleNavigation(text)}
+            >
+              {text}
+            </li>
           )
         )}
-      </List>
+      </ul>
 
-
+      {/* Decorative Element */}
       <div className="sidebar-decorator" />
-    </Drawer>
+    </div>
   );
 };
 

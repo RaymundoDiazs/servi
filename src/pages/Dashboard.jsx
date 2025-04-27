@@ -39,6 +39,7 @@ const cards = [
   {
     label: "Cerrar sesión",
     icon: <FiLogOut />,
+    to: "/logout"
   },
 ];
 

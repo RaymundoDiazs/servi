@@ -1,0 +1,131 @@
+.cardList {
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 5px;
+  padding: 3px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-grid {
+  display: grid;
+  gap: 0rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Dynamic resizing */
+  justify-content: center; 
+}
+
+.card {
+  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.grid-item {
+  flex: 1 1 calc(25% - 2rem); /* responsive grid */
+  min-width: 250px;
+}
+
+.card-content {
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.card-content:hover {
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.image-container {
+  position: relative;
+}
+
+.project-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.modalidad-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background-color: #e0f2fe;
+  color: #0284c7;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.modalidad-text {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.project-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.carreras-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.carrera-pill {
+  font-size: 0.7rem;
+  padding: 4px 1.4rem;
+  border-radius: 999px;
+  background-color: #f3f4f6;
+  color: #334155;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
