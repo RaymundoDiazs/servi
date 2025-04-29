@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import PixelCharacter from "../components/PixelCharacter";
@@ -7,8 +7,6 @@ import PetMode from "../components/PetMode";
 import Hero from "../components/Hero";
 import RightBar from "../components/RightBar"; 
 import { useLocation } from "react-router-dom";
-
-import { useState, useContext } from "react";
 import { SessionContext } from "../Contexts/SessionContext";
 
 
@@ -56,7 +54,6 @@ export default function MainLayout({ children }) {
           setShowPetMode={setShowPetMode}
         />
             
-        <Header onMenuClick={toggleSidebar} toggleCharacter={toggleCharacter} />
         {location.pathname === "/" && sessionType ==="alumno" && <Hero />}
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
 

@@ -125,6 +125,7 @@ export default function App() {
             {/* Rutas públicas sin layout */}
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/signin" element={<SignIn></SignIn>}></Route>
           </Routes>
         </Router>
       </BallProvider>
