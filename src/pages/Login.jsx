@@ -17,7 +17,9 @@ export default function Login() {
     formInfo.append("username", username);
     formInfo.append("password", password);
 
-    fetch("http://localhost:5000/login", {
+
+    fetch("http://localhost:8000/login", {
+
       method: "POST",
       credentials: "include",
       body: formInfo,
@@ -39,7 +41,9 @@ export default function Login() {
         <p className="service-text">¿Listo para registrar un proyecto?</p>
       </div>
 
-      {/* {/pt derecha/} */}
+
+      {/*pt derecha*/}
+
       <div className="login-right">
         <div className="login-form">
           <h1>Inicio de sesión</h1>
@@ -73,9 +77,13 @@ export default function Login() {
 
           {/*Entrar */}
           <input type="submit" value="Entrar" onClick={handleSubmit} className="submit" />
+
           <input type="submit" value="Regístrate" onClick={() => navigate("/signin")} className="submit" />
+
         </div>
       </div>
     </div>
   );
+
 }
+

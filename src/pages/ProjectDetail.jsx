@@ -1,127 +1,423 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { projects } from "../data/projects";
 import "./ProjectDetail.css";
+
 import {
-  FaUserGraduate,
-  FaChalkboardTeacher,
-  FaPersonBooth,
-  FaStar,
-  FaHeart,
-} from "react-icons/fa";
+  FiClipboard,
+  FiMapPin,
+  FiClock,
+  FiBookOpen,
+  FiUsers,
+  FiTarget,
+  FiList,
+  FiCalendar,
+  FiKey
+} from "react-icons/fi";
+
+
+
 
 const dummyComments = [
-  { name: "Josefina", text: "Muy buen proyecto, aprendí mucho." },
-  { name: "Luis", text: "Gran experiencia, ¡recomiendo participar!" },
-  { name: "Soin", text: "El equipo fue muy amable y el impacto real." },
-  { name: "Miguel", text: "Volvería a participar sin duda." },
-  { name: "Valeria", text: "Conecté con muchas personas increíbles." },
+  { name: "María", text: "Una experiencia inolvidable " },
+  { name: "Carlos", text: "El equipo muy profesional y comprometido." },
+  { name: "Luz", text: "Recomiendo ampliamente este voluntariado." },
 ];
 
 const ProjectDetail = () => {
+  //Estados
   const { id } = useParams();
   const navigate = useNavigate();
   const project = projects.find((p) => p.id.toString() === id);
 
-  if (!project) return <div>Proyecto no encontrado.</div>;
+  const [imgIndex, setImgIndex] = useState(0);
+  const [balls, setBalls] = useState([]);
+  const [showAllPhotos, setShowAllPhotos] = useState(false); 
+const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
 
-  const relatedProjects = projects.filter(
-    (p) => p.categoria === project.categoria && p.id !== project.id
-  );
 
-  const randomProject = projects.find((p) => p.id !== project.id);
+  const containerRef = useRef(null);
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    if (!project) return;
+    const initialBalls = project.images.slice(0, 3).map((_, i) => ({
+      x: 50 + i * 80,
+      y: 50 + i * 60,
+      dx: 2 + i,
+      dy: 2 - i,
+      image: project.images[i],
+    }));
+    setBalls(initialBalls);
+  }, [project]);
+
+  useEffect(() => {
+    const move = () => {
+      setBalls(prev =>
+        prev.map(ball => {
+          const container = containerRef.current?.getBoundingClientRect();
+          const size = 80; //80
+          let newX = ball.x + ball.dx;
+          let newY = ball.y + ball.dy;
+
+          if (container) {
+            if (newX < 0 || newX + size > container.width) {
+              ball.dx *= -1;
+              newX = ball.x + ball.dx;
+            }
+            if (newY < 0 || newY + size > container.height) {
+              ball.dy *= -1;
+              newY = ball.y + ball.dy;
+            }
+          }
+
+          return { ...ball, x: newX, y: newY };
+        })
+      );
+    };
+
+    const interval = setInterval(move, 20);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleNext = () => {
+    setImgIndex((imgIndex + 1) % project.images.length);
+  };
+
+  const handlePrev = () => {
+    setImgIndex((imgIndex - 1 + project.images.length) % project.images.length);
+  };
+
+  const handleScrollLeft = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: -carouselRef.current.offsetWidth, behavior: "smooth" });
+    }
+  };
+
+  const handleScrollRight = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: carouselRef.current.offsetWidth, behavior: "smooth" });
+    }
+  };
+
+  const relatedProjects = projects.filter((p) => p.id.toString() !== id);
+
+  if (!project) return <div>Proyecto no encontrado</div>;
 
   return (
     <div className="project-detail-container">
-      {/*ceccion principal */}
-      <div className="main-project-section">
-        {/* Carta principal */}
-        <div className="main-card">
-          <img src={project.images[0]} alt={project.title} className="main-img" />
+      {/* HERO */}
+      
+<section className="hero-section">
+  <h1 className="project-title">{project.title}</h1>
+  <p className="project-subtitle">Descubre este proyecto</p>
 
-          <div className="main-info">
-            <h2>{project.title}</h2>
+  <div className="badge-container">
+    <span className="badge modalidad">{project.modalidad}</span>
+    {project.carreras.map((c, i) => (
+      <span className="badge" key={i}>{c}</span>
+    ))}
+  </div>
+</section>
 
-            <div className="project-meta">
-              <span className="badge modalidad">
-                {project.modalidad === "Presencial" ? <FaPersonBooth /> : <FaChalkboardTeacher />}
-                {project.modalidad}
-              </span>
-              {project.carreras.map((c) => (
-                <span key={c} className="badge">
-                  <FaUserGraduate size={11} />
-                  {c}
-                </span>
-              ))}
-            </div>
+{/* CARRUSEL GRANDE + BOLAS */}
+<section className="photo-gallery">
+  <div className="gallery-layout">
+    <div className="gallery-main">
+      <img src={project.images[0]} alt="Principal" />
+    </div>
 
-            <p className="project-description">{project.descripcion}</p>
+    <div className="gallery-side">
+  {project.images.slice(1, 5).map((img, i) => (
+    <div
+      className="side-image hoverable"
+      key={i}
+      onClick={() => {
+        setSelectedPhotoIndex(i + 1); // +1 porque la 0 ya está a la izquierda
+        setShowAllPhotos(true);
+      }}
+    >
+      <img src={img} alt={`Vista ${i + 2}`} />
+    </div>
+  ))}
+  {project.images.length > 5 && (
+    <div className="side-image see-more">
+      <button
+        className="see-more-btn"
+        onClick={() => {
+          setSelectedPhotoIndex(0);
+          setShowAllPhotos(true);
+        }}
+      >
+        Ver {project.images.length} fotos
+      </button>
+    </div>
+  )}
+</div>
 
-            <div className="project-features">
-              <span>Duración: 3 meses</span>
-              <span>Horas requeridas: 100 hrs</span>
-              <span>Ubicación: {project.modalidad === "Presencial" ? "Campus" : "Virtual"}</span>
-            </div>
 
-            {/*botones glass*/}
-            <div className="project-actions">
-              <button className="glass-button">
-                <FaHeart size={14} style={{ marginRight: 6 }} />
-                Favorito
-              </button>
-              <button className="glass-button">Agregar a lista</button>
-              <button className="glass-button">Postularme</button>
-            </div>
-          </div>
-        </div>
 
-        {/* columna lateral */}
-        <div className="side-column">
-          {/*proyecto aleatorio */}
-          <div className="highlight-project">
-            <h4>Proyecto Destacado</h4>
-            <img src={randomProject.images[0]} alt={randomProject.title} />
-            <h5>{randomProject.title}</h5>
-            <button onClick={() => navigate(`/projects/${randomProject.id}`)}>Ir a ver →</button>
-          </div>
+  </div>
+</section>
 
-          {/* Comentarios recientes */}
-          <div className="recent-comments">
-            <h4>Comentarios recientes</h4>
-            {dummyComments.slice(0, 5).map((c, i) => (
-              <div key={i} className="comment-item">
-                <img src={`https://i.pravatar.cc/36?img=${i + 5}`} alt={c.name} />
-                <div>
-                  <strong>{c.name}</strong>
-                  <p>{c.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+
+{/* NUEVO CONTENIDO: VA FUERA DEL HERO */}
+<section className="quote-section">
+  <blockquote>
+    <p>“Descrpcion/frase rapida de proyecto.”</p>
+  </blockquote>
+</section>
+
+<section className="project-kpi-section">
+  <div className="kpi-card">
+    <FiClock className="kpi-icon" />
+    <div>
+      <h4>100 hrs</h4>
+      <p>Requeridas</p>
+    </div>
+  </div>
+  <div className="kpi-card">
+    <FiUsers className="kpi-icon" />
+    <div>
+      <h4>{project.carreras.length}</h4>
+      <p>Carreras compatibles</p>
+    </div>
+  </div>
+  <div className="kpi-card">
+    <FiCalendar className="kpi-icon" />
+    <div>
+      <h4>Feb - Jun</h4>
+      <p>Periodo</p>
+    </div>
+  </div>
+</section>
+
+<div className="wave-divider">
+  <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+    <path fill="#f0f4f8" d="M0,0 C480,100 960,0 1440,100 L1440,0 L0,0 Z"></path>
+  </svg>
+</div>
+
+
+
+
+
+<div className="kpi-container-notch">
+  <div className="notch-deco" />
+  <div className="kpi-chip">
+    <FiCalendar className="kpi-icon" />
+    <span>Febrero - Junio</span>
+  </div>
+  <div className="kpi-chip">
+    <FiClock className="kpi-icon" />
+    <span>100 hrs mínimas</span>
+  </div>
+  <div className="kpi-chip">
+    <FiKey className="kpi-icon" />
+    <span>Clave: WA1058</span>
+  </div>
+</div>
+
+
+
+
+      {/* INFO */}
+      <section className="info-structured-section">
+  <h2 className="info-title">Información del Proyecto</h2>
+
+  {/* Sección: Detalles Generales */}
+  <h3 className="info-group-title">
+  <FiClipboard style={{ marginRight: "8px" }} /> Detalles Generales
+</h3>
+
+  <div className="info-grid-modern">
+    <div className="info-card" style={{ "--i": 0 }}>
+      <FiClipboard className="info-icon" />
+      <div>
+        <h4>Tipo de inscripción</h4>
+        <p>Por IRIS</p>
       </div>
+    </div>
+    <div className="info-card" style={{ "--i": 1 }}>
+      <FiMapPin className="info-icon" />
+      <div>
+        <h4>Modalidad</h4>
+        <p>{project.modalidad}</p>
+      </div>
+    </div>
+    <div className="info-card" style={{ "--i": 2 }}>
+      <FiUsers className="info-icon" />
+      <div>
+        <h4>Carreras</h4>
+        <p>{project.carreras.join(", ")}</p>
+      </div>
+    </div>
+    <div className="info-card full" style={{ "--i": 3 }}>
+      <FiTarget className="info-icon" />
+      <div>
+        <h4>Objetivo</h4>
+        <p>Crear contenido constructivo que reduzca la fatiga informativa.</p>
+      </div>
+    </div>
+  </div>
 
-      {/*Proyectos relacionados */}
-      {relatedProjects.length > 0 && (
-        <div className="related-section">
-          <h3>Explora más proyectos de esta categoría</h3>
-          <div className="related-scroll">
+  {/* Sección: Horas y Clave */}
+  <h3 className="info-group-title">
+  <FiClock style={{ marginRight: "8px" }} /> Horas y claves
+</h3>
+
+  <div className="info-grid-modern">
+    <div className="info-card" style={{ "--i": 4 }}>
+      <FiClock className="info-icon" />
+      <div>
+        <h4>Horas requeridas</h4>
+        <p>100 hrs</p>
+      </div>
+    </div>
+    <div className="info-card" style={{ "--i": 5 }}>
+      <FiClock className="info-icon" />
+      <div>
+        <h4>Horas máximas</h4>
+        <p>Hasta 180</p>
+      </div>
+    </div>
+    <div className="info-card" style={{ "--i": 6 }}>
+      <FiKey className="info-icon" />
+      <div>
+        <h4>Clave</h4>
+        <p>WA1058 - Grupo: 642 - CRN: 61985</p>
+      </div>
+    </div>
+  </div>
+
+  {/* Sección: Actividades */}
+  <h3 className="info-group-title">
+  <FiList style={{ marginRight: "8px" }} /> Actividades
+</h3>
+
+  <div className="info-grid-modern">
+    <div className="info-card full" style={{ "--i": 7 }}>
+      <FiList className="info-icon" />
+      <div>
+        <h4>Actividades</h4>
+        <ul>
+          <li>Tomar curso de redacción</li>
+          <li>Buscar noticias positivas</li>
+          <li>Crear contenido visual</li>
+          <li>Entrevistar y reportar</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {/* Sección: Logística */}
+  <h3 className="info-group-title">
+  <FiMapPin style={{ marginRight: "8px" }} /> Logística
+</h3>
+
+  <div className="info-grid-modern">
+    <div className="info-card" style={{ "--i": 8 }}>
+      <FiMapPin className="info-icon" />
+      <div>
+        <h4>Ubicación</h4>
+        <p>{project.modalidad === "Presencial" ? "Campus" : "En línea"}</p>
+      </div>
+    </div>
+    <div className="info-card" style={{ "--i": 9 }}>
+      <FiCalendar className="info-icon" />
+      <div>
+        <h4>Horario</h4>
+        <p>Lunes a viernes entre 8am y 4pm</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+    {/* INFO */}
+    <section className="info-structured-section">
+  <h2 className="info-title">Información del Proyecto</h2>
+  <div className="info-grid-modern">
+    {/* infor-cards */}
+  </div>
+</section>
+
+
+
+      {/* COMENTARIOS */}
+      <section className="comments-section">
+        <h2>Comentarios recientes</h2>
+        {dummyComments.map((c, i) => (
+          <div className="comment-item" key={i}>
+            <img src={`https://i.pravatar.cc/36?img=${i + 6}`} alt={c.name} />
+            <div>
+              <strong>{c.name}</strong>
+              <p>{c.text}</p>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* PROYECTOS RELACIONADOS */}
+      <section className="related-section">
+        <h2>Proyectos Relacionados</h2>
+        <div className="related-carousel-wrapper">
+          <button className="related-arrow left" onClick={handleScrollLeft}>←</button>
+          <div className="related-carousel" ref={carouselRef}>
             {relatedProjects.map((p) => (
               <div
-                key={p.id}
                 className="related-card"
+                key={p.id}
                 onClick={() => navigate(`/projects/${p.id}`)}
               >
                 <img src={p.images[0]} alt={p.title} />
-                <strong>{p.title}</strong>
-                <div style={{ fontSize: "0.8rem", color: "#555" }}>
-                  <FaStar size={12} color="#facc15" /> {(Math.random() * 1 + 4).toFixed(1)}
-                </div>
+                <h4>{p.title}</h4>
+                <p>Ver más</p>
               </div>
             ))}
           </div>
+          <button className="related-arrow right" onClick={handleScrollRight}>→</button>
         </div>
-      )}
+      </section>
+
+     
+      {showAllPhotos && (
+  <div className="lightbox-overlay" onClick={() => setShowAllPhotos(false)}>
+    <div className="lightbox-gallery" onClick={(e) => e.stopPropagation()}>
+      <button className="close-lightbox" onClick={() => setShowAllPhotos(false)}>✕</button>
+
+      {/* Navegación */}
+      <button
+        className="nav-arrow left"
+        onClick={() =>
+          setSelectedPhotoIndex(
+            (selectedPhotoIndex - 1 + project.images.length) % project.images.length
+          )
+        }
+      >
+        ←
+      </button>
+
+      <img
+        src={project.images[selectedPhotoIndex]}
+        alt={`Foto ${selectedPhotoIndex + 1}`}
+        className="lightbox-main-img"
+      />
+
+      <button
+        className="nav-arrow right"
+        onClick={() =>
+          setSelectedPhotoIndex((selectedPhotoIndex + 1) % project.images.length)
+        }
+      >
+        →
+      </button>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };

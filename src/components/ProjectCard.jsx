@@ -1,37 +1,20 @@
-import React, { useState, useEffect } from "react";
-// import { Link } from "react-router"
-import { FaUserGraduate, FaChalkboardTeacher, FaHeart } from "react-icons/fa";
-
-import {
-    Box,
-    Card,
-    CardContent,
-    Typography,
-    Grid,
-    Button,
-    Select,
-    MenuItem,
-    Avatar,
-    AvatarGroup,
-    Fade,
-  } from "@mui/material";
 export function ProjectCard({ project }) {
-  const [carreras, setCarreras] = useState([{}]);
+  const [carreras, setCarreras] = useState([]);
+
   useEffect(() => {
     fetch(`http://localhost:5000/proyecto_carrera/` + project.proyecto_id)
       .then((res) => res.json())
-      .then((data) => {
-        setCarreras(data);
-      });
+      .then((data) => setCarreras(data))
+      .catch((err) => console.error("Error cargando carreras:", err));
   }, [project.proyecto_id]);
 
   return (
-    <div className="card fade-in">
+    <div className="project-card fade-in"> {/* CAMBIADO de "card" a "project-card" */}
       <div className="card-content">
         <div className="image-container">
           <img
-            src="./public/logo.jpg"
-            alt={project.title}
+            src="/logo.jpg"
+            alt={project.nombre_proyecto}
             className="project-image"
           />
         </div>
@@ -39,11 +22,7 @@ export function ProjectCard({ project }) {
         <div className="card-body">
           <div className="modalidad-info">
             <div className="avatar">
-              {project.modalidad === "Presencial" ? (
-                <FaPerson />
-              ) : (
-                <FaChalkboardTeacher />
-              )}
+              {project.modalidad === "Presencial" ? <FaPerson /> : <FaChalkboardTeacher />}
             </div>
             <p className="modalidad-text">{project.modalidad}</p>
           </div>
@@ -51,28 +30,25 @@ export function ProjectCard({ project }) {
           <h3 className="project-title">{project.nombre_proyecto}</h3>
 
           <div className="carreras-list">
-            {carreras.map((carrera, index) => (
-              <div className="carrera-pill" key={index}>
+            {carreras.map((carrera, idx) => (
+              <div className="carrera-pill" key={idx}>
                 <FaUserGraduate size={11} />
                 {carrera.nombre}
               </div>
             ))}
           </div>
 
-          <div className="card-footer">{/* EN CASO DE QUE SE NECESITE*/}</div>
+          <div className="card-footer">
+            <div className="footer-info">
+              <strong>Horas:</strong> {project.cantidad || "N/A"}
+            </div>
+            <div className="footer-info">
+              <strong>Edad:</strong> {project.rango_edad || "N/A"}
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-  
-export function CardList({ entries }) {
-  const cards = entries.map((entry) => (
-    <ProjectCard project={entry} key={entry.proyecto_id}></ProjectCard>
-  ));
-  return (
-    <div className="cardList">
-      <div className="card-grid">{cards}</div>
-    </div>
-  );
-}
+

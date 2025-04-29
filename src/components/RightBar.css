@@ -1,0 +1,269 @@
+.rightbar-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1000;
+    transition: width 0.4s ease;
+    border-top-left-radius: 20px; /* Esquinas redondeadas arriba */
+    border-bottom-left-radius: 20px; /* Esquinas redondeadas abajo */
+  }
+  
+  .rightbar-overlay.visible {
+    width: 300px;
+  }
+  
+  .rightbar-panel {
+    width: 300px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    padding: 2rem 1.5rem;
+    box-sizing: border-box;
+    position: relative;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;  /* Permite scroll dentro del panel */
+    max-height: 90vh;  /* Limitar la altura máxima */
+    border-radius: 20px; /* Bordes redondeados del panel */
+  }
+  
+  .rightbar-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .rightbar-title {
+    margin-top: 2rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .rightbar-options {
+    margin-top: 2rem;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .rightbar-options li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Lupi en cuadro blanco */
+  .lupi-container {
+    background: white;
+    border-radius: 16px;
+    padding: 1rem 2rem;
+    margin: 2rem auto 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 120px;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .lupi-sprite {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    image-rendering: pixelated;
+  }
+  
+  /* === Nuevas funcionalidades IA === */
+  .rightbar-section {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  
+  .rightbar-section label,
+  .rightbar-section h4 {
+    font-size: 0.9rem;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+    display: block;
+    font-weight: 600;
+  }
+  
+  .rightbar-select,
+  .rightbar-slider,
+  .rightbar-switch {
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    font-family: inherit;
+  }
+  
+  .rightbar-button {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  
+  .rightbar-button:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+  
+  .rightbar-panel {
+    background: rgba(20, 20, 30, 0.5); /* más oscuro que el blanco translúcido */
+    color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .rightbar-title,
+  .rightbar-options li,
+  .rightbar-section label,
+  .rightbar-section p {
+    color: white;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4); /* mejora el contraste */
+  }
+  
+  .rightbar-options li {
+    font-weight: 500;
+    font-size: 1rem;
+    transition: background 0.2s ease;
+  }
+  
+  .rightbar-options li:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .rightbar-select {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    padding: 0.4rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .rightbar-slider {
+    accent-color: #4f46e5;
+  }
+  
+  .rightbar-button {
+    background: linear-gradient(to right, #4f46e5, #6366f1);
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .rightbar-button:hover {
+    background: linear-gradient(to right, #4338ca, #4f46e5);
+  }
+  
+  .rightbar-button3 {
+    background: linear-gradient(to right, #8c2183, #993197); /* Amarillo pastel */
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .rightbar-button3:hover {
+    background: linear-gradient(to right, #3a0535, #2d0522); /* Amarillo más fuerte en hover */
+  }
+  
+  
+  .pieza {
+    width: 80px; /* Tamaño de las piezas ajustado */
+    height: 80px; /* Tamaño de las piezas ajustado */
+    object-fit: cover; /* Asegura que la imagen se ajuste bien dentro del contenedor */
+  }
+  
+  
+  
+  .rightbar-button2 {
+      background: linear-gradient(to right, #f8e71c, #fcd34d); /* Amarillo pastel */
+      border: none;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative; /* Necesario para el efecto */
+      overflow: hidden; /* Para que el efecto no se salga del contenedor */
+    }
+    
+    .rightbar-button2:hover {
+      background: linear-gradient(to right, #f7c600, #fbbf24); /* Amarillo más fuerte en hover */
+      transform: scale(1.05); /* Agrandar un poco al pasar el mouse */
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15), 0 0 12px rgba(255,255,255,0.7); /* Efecto sombra */
+    }
+    
+    .rightbar-button2:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-20deg);
+      opacity: 0;
+      z-index: 1;
+      transition: left 1.5s ease, opacity 0.3s ease;
+    }
+    
+    .rightbar-button2:hover:before {
+      left: 100%;
+      opacity: 1;
+      transition: left 1.5s ease, opacity 0.3s ease;
+    }
+    
+    .rightbar-button2 > * {
+      position: relative;
+      z-index: 2;
+    }
+  
+    /* Efecto de salto (bounce) */
+  @keyframes bounceUp {
+      0% {
+        transform: translateY(0);
+      }
+      30% {
+        transform: translateY(-6px);
+      }
+      60% {
+        transform: translateY(2px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+  }
+    
