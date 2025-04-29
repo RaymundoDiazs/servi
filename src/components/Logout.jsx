@@ -8,7 +8,7 @@ export default function Logout(){
     const navigate = useNavigate();
     
     useEffect(() => {
-        fetch('http://localhost:5000/logout',{
+        fetch('http://localhost:8000/logout',{
             method: "GET",
             credentials: "include"
         })

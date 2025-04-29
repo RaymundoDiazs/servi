@@ -5,7 +5,7 @@ const cors = require('cors');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 
-app.use(cors({origin: 'http://localhost:5174', credentials: true}));
+app.use(cors({origin: 'http://localhost:5173', credentials: true}));
 app.use(express.json());
 const multer = require('multer');
 
@@ -26,7 +26,7 @@ const cn = {
     port: 5432,
     database: 'servi',
     user: 'postgres',
-    password: '3166',
+    password: 'postgres',
     allowExitOnIdle: true
 }
 const db = pgp(cn);
