@@ -8,6 +8,10 @@ import Hero from "../components/Hero";
 import RightBar from "../components/RightBar"; 
 import { useLocation } from "react-router-dom";
 
+import { useState, useContext } from "react";
+import { SessionContext } from "../Contexts/SessionContext";
+
+
 export default function MainLayout({ children }) {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showCharacter, setShowCharacter] = useState(false);
@@ -16,6 +20,7 @@ export default function MainLayout({ children }) {
   const [rightMenuOpen, setRightMenuOpen] = useState(false);
 
   const location = useLocation();
+  const { sessionType } = useContext(SessionContext)
 
   const toggleSidebar = () => setShowSidebar(!showSidebar);
   const toggleCharacter = () => setShowCharacter((prev) => !prev);
@@ -28,6 +33,9 @@ export default function MainLayout({ children }) {
         
         {/* teus modos */}
         {showCharacter && <PixelCharacter />}
+
+
+
         {showAICharacter && <PixelCharacterAI />}
         {showPetMode && <PetMode />}
 
@@ -47,14 +55,11 @@ export default function MainLayout({ children }) {
           setShowAICharacter={setShowAICharacter}
           setShowPetMode={setShowPetMode}
         />
+            
+        <Header onMenuClick={toggleSidebar} toggleCharacter={toggleCharacter} />
+        {location.pathname === "/" && sessionType ==="alumno" && <Hero />}
+        <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
 
-        {/* Hero solo en "/" */}
-        {location.pathname === "/" && <Hero />}
-
-        {/* Contenido de la página */}
-        <div style={{ position: "relative", zIndex: 1 }}>
-          {children}
-        </div>
       </div>
     </div>
   );

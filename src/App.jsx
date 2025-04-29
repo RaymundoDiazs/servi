@@ -16,6 +16,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import FormOSF from "./pages/FormOSF";
 import Login from "./pages/Login";
 import Logout from "./components/Logout";
+import SignIn from "./pages/SignIn";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SessionProvider } from "./Contexts/SessionContext";
 import "./App.css";
@@ -106,6 +107,7 @@ export default function App() {
 
   return (
     <SessionProvider>
+
       <BallProvider>
         <Router>
           <Routes>
@@ -127,5 +129,6 @@ export default function App() {
         </Router>
       </BallProvider>
     </SessionProvider>
+
   );
 }
