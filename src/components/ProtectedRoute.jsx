@@ -5,7 +5,7 @@ const ProtectedRoute = ({children }) => {
   const [sessionType, setSessionType] = useState('');
 
   useEffect(() => {
-    fetch("http://localhost:5000/session/detail", {
+    fetch("http://localhost:8000/session/detail", {
       credentials: "include",
     })
       .then((res) => {

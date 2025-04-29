@@ -1,16 +1,16 @@
 const express = require('express');
 const app = express();
-const PORT = 5000;
+const PORT = 8000;
 const cors = require('cors');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 
-app.use(cors({origin: 'http://localhost:5173', credentials: true}));
+app.use(cors({origin: 'http://localhost:5174', credentials: true}));
 app.use(express.json());
 const multer = require('multer');
 
 const storage = multer.diskStorage({
-  destination: '../client/src/assets',
+  destination: '../src/assets',
   filename: function (req, file, cb){
   cb(null, file.originalname)
   }
@@ -26,7 +26,7 @@ const cn = {
     port: 5432,
     database: 'servi',
     user: 'postgres',
-    password: 'postgres',
+    password: '3166',
     allowExitOnIdle: true
 }
 const db = pgp(cn);
@@ -60,7 +60,8 @@ app.use(express.json());
 // endpoint de testing para sesión :D
 app.get('/session/detail', authenticateSession, (req, res) => {
   res.json({ message: 'TEST DE SESIÓN :D, SI VES ESTO HAY UNA SESIÓN ACTIVA, LA SESIÓN EXPIRARÁ EN '+req.session.cookie.expires.getHours()+" HORAS",
-    tipo: req.session.tipo
+    tipo: req.session.tipo,
+    correo: req.session.correo
   });
   // res.json({ message: String(req.session.cookie.expires.getHours())});
   // console.log( req.session.cookie.expires.getSeconds())
@@ -99,6 +100,7 @@ app.post('/login', upload.none(), (req, res) => {
           if(data.contrasena == password){
               req.session.user_id = data.user_id;
               req.session.tipo = data.tipo;
+              req.session.correo = data.correo;
               req.session.save(function (err) {
                   if (err) return next(err)
               })
@@ -110,6 +112,14 @@ app.post('/login', upload.none(), (req, res) => {
           res.status(401).send('Invalid credentials');
       }
   })
+  .catch((error) => console.log('ERROR: ', error));
+});
+
+app.post('/users/alumnoNuevo', upload.none(), function(req, res){
+  console.log(req.body)
+  const {nombre, matricula, carrera, password, numero} = req.body;
+  db.none("CALL registrar_alumno($1, $2, $3, $4, $5);", [matricula, carrera, nombre, numero, password])
+  .then(() => res.status(200).send('Usuario creado'))
   .catch((error) => console.log('ERROR: ', error));
 });
 
