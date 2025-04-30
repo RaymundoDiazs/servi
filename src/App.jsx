@@ -16,7 +16,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import FormOSF from "./pages/FormOSF";
 import Login from "./pages/Login";
 import Logout from "./components/Logout";
-import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SessionProvider } from "./Contexts/SessionContext";
 import "./App.css";
@@ -125,7 +125,7 @@ export default function App() {
             {/* Rutas públicas sin layout */}
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/signin" element={<SignIn></SignIn>}></Route>
+            <Route path="/signup" element={<SignUp></SignUp>}></Route>
           </Routes>
         </Router>
       </BallProvider>

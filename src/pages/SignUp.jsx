@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
-const SignIn = () => {
+const SignUp = () => {
     const [formData, setFormData] = useState({nombre:'', matricula: '', carrera:'', password: '', numero: '' });
     const [img, setImg] = useState(null)
     const [files, setFiles] = useState([])
@@ -77,7 +77,7 @@ const SignIn = () => {
             if (res.ok) {
                 setSuccessMessage("Registro exitoso. Redirigiendo...");
                 setTimeout(() => {
-                    navigate("/login"); // Cambia "/otra-pagina" por la ruta deseada
+                    navigate("/login");
                 }, 3000); // Redirige después de 3 segundos
             } else {
                 console.log("Error en el registro");
@@ -98,9 +98,6 @@ const SignIn = () => {
         for (let i = 0; i < files.length; i++) {
             formInfOsf.append('fotos', files[i]); // 'fotos' debe coincidir con upload.array('fotos')
         }
-        // formInfOsf.append('img', img.file, img.filename);
-        // formInfOsf.append('foto2', foto2.file, foto2.filename);
-        // formInfOsf.append('foto3', foto3.file, foto3.filename);
 
 
         fetch("http://localhost:8000/users/osfNuevo", {
@@ -119,15 +116,12 @@ const SignIn = () => {
         })
         .catch((error) => console.log(error));
     };
-    
-    function test2(){
-        console.log(foto1, foto2, foto3)
-    }
+
 
     return (
         <>
-        <div className="signin-container">
-            <h2>Sign In</h2>
+        <div className="signup-container">
+            <h2>Sign Up</h2>
             <p>Regístrate como:</p>
             <button onClick={() => setUserType("alumno")}>Alumno</button>
             <button onClick={() => setUserType("osf")}>Organización Socioformadora</button>
@@ -205,6 +199,7 @@ const SignIn = () => {
                             <option value="organización">Organización</option>
                             <option value="gobierno">Gobierno</option>
                             <option value="empresa">Empresa</option>
+                            <option value="estudiante">Estudiante "Líder social"</option>
                         </select>
                     </div>
                     <div>
@@ -313,11 +308,10 @@ const SignIn = () => {
                     </div>
                     <button type="submit">Registrar OSF</button>
                 </form>
-                    <button onClick={test2}> test</button>
             </div>
         )}
         </>
     );
 };
 
-export default SignIn;
+export default SignUp;
