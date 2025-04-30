@@ -78,7 +78,7 @@ export default function Login() {
           {/*Entrar */}
           <input type="submit" value="Entrar" onClick={handleSubmit} className="submit" />
 
-          <input type="submit" value="Regístrate" onClick={() => navigate("/signin")} className="submit" />
+          <input type="submit" value="Regístrate" onClick={() => navigate("/signup")} className="submit" />
 
         </div>
       </div>
