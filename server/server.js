@@ -123,6 +123,34 @@ app.post('/users/alumnoNuevo', upload.none(), function(req, res){
   .catch((error) => console.log('ERROR: ', error));
 });
 
+app.post('/users/osfNuevo', upload.array("fotos",3), function(req, res) {
+  console.log(req.body);
+  console.log("DEBERÍA DE HABER COSAS ACÁ")
+  // console.log(req.files); // Aquí estarán los archivos subidos
+
+  // const { nombre, matricula, carrera, password, numero } = req.body;
+
+  // Verificar si los archivos se subieron correctamente
+  // if (!req.files || req.files.length !== 3) {
+  //   return res.status(400).send('Se requieren 3 fotos de las instalaciones.');
+  // }
+
+  // Obtener las rutas de los archivos subidos
+  // const fotos = req.files.map(file => file.path);
+
+  // Aquí puedes guardar las rutas de las fotos en la base de datos junto con los demás datos
+  // db.none(
+  //   "CALL registrar_osf($1, $2, $3, $4, $5, $6, $7, $8);",
+  //   [matricula, carrera, nombre, numero, password, fotos[0], fotos[1], fotos[2]]
+  // )
+  // console.log("acá va algo")
+  //   .then(() => res.status(200).send('Usuario OSF creado'))
+  //   .catch(error => {
+  //     console.log('ERROR: ', error);
+  //     res.status(500).send('Error al registrar el OSF.');
+  //   });
+});
+
 // logout
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
