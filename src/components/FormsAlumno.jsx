@@ -29,7 +29,7 @@ const FormsAlumno = () => {
                 formInfo.append(key, value);
             }
         });
-
+        console.log(formInfo);
         fetch("http://localhost:8000/users/alumnoNuevo", {
             method: "POST",
             body: formInfo,
