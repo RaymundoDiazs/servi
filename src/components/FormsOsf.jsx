@@ -33,6 +33,26 @@ const FormsOSF = () => {
     const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
     const navigate = useNavigate(); // Hook para redirigir
 
+    const poblacionList = [
+        "Comunidades urbano marginadas",
+        "Comunidades rurales",
+        "Primera infancia (0 a 6 años)",
+        "Niños y niñas de nivel primaria",
+        "Niños, niñas y adolescentes",
+        "Mujeres en situación vulnerable",
+        "Adultos mayores", 
+        "Personas con discapacidad",
+        "Personas con enfermedades crónicas/terminales",
+        "Personas con problemas de adicciones",
+        "Personas migrantes o situación de movilidad"
+    ]
+
+    
+    const [poblacionSelect, setPoblacionSelet] = useState([])
+    
+    const handleChangePoblacion = (e) => {
+        console.log("TO DO!!!!!!!")
+    }
 
 
     useEffect(() => {
@@ -72,8 +92,6 @@ const FormsOSF = () => {
             }
         });
 
-        formInfOsf.append('ayuda', 'osf')
-
         console.log(formInfOsf)
         
         // Append files
@@ -109,9 +127,10 @@ const FormsOSF = () => {
     };
 
     
-    
     return (
         <div>
+            <h1>Alta de Organizaciones Socio Formadoras</h1>
+            <h2>Datos de la organización y su responsable</h2>
             <div className="registerFormOsf">
                 <form onSubmit={handleSubmitOsf}>
                     <div>
@@ -124,6 +143,8 @@ const FormsOSF = () => {
                             <option value="estudiante">Estudiante "Líder social"</option>
                         </select>
                     </div>
+                    { formDataOsf.subtipo != "estudiante" && formDataOsf.subtipo != "" && (
+                        <div>
                     <div>
                         <label htmlFor="correo">Ingresa un correo que usarás como usuario en este sitema:</label>
                         <input type="email" name='correo' value={formDataOsf.correo} onChange={handleChangeOsf} />
@@ -133,23 +154,23 @@ const FormsOSF = () => {
                         <input type="password" name='contrasena' value={formDataOsf.contrasena} onChange={handleChangeOsf}/>
                     </div>
                     <div>
-                        <label htmlFor="nombre">Nombre oficial de la organización:</label>
+                            <label htmlFor="nombre">1. Nombre oficial de la organización:</label>
                         <input type="text" value={formDataOsf.nombre} onChange={handleChangeOsf} name='nombre' />
                     </div>
                     <div>
-                        <label htmlFor="mision">Misión:</label>
+                            <label htmlFor="mision">1.1 Misión:</label>
                         <textarea value={formDataOsf.mision} onChange={handleChangeOsf} name="mision" ></textarea>
                     </div>
                     <div>
-                        <label htmlFor="vision">Visión:</label>
+                            <label htmlFor="vision">1.2 Visión:</label>
                         <textarea value={formDataOsf.vision} onChange={handleChangeOsf} name="vision" ></textarea>
                     </div>
                     <div>
-                        <label htmlFor="objetivo">Objetivo:</label>
+                            <label htmlFor="objetivo">1.3 Objetivos:</label>
                         <textarea value={formDataOsf.objetivo} onChange={handleChangeOsf} name="objetivo" ></textarea>
                     </div>
                     <div>
-                        <label htmlFor="ods">ODS:</label> <br />
+                            <label htmlFor="ods">1.4 Objetivo de Desarrollo Sostenible (ODS) en el que se enfoca la organización </label> <br />
                         {odsList.map((ods, index) => (
                             <label key={index}>
                             <input type="radio" name="ods" value={ods.ods_id} onChange={handleChangeOsf} />
@@ -159,8 +180,16 @@ const FormsOSF = () => {
                         ))}                    
                     </div>
                     <div>
-                        <label htmlFor="poblacion">Población:</label>
+                            <label htmlFor="poblacion">Población que atiende:</label>
                         <input type="text" value={formDataOsf.poblacion} onChange={handleChangeOsf} name="poblacion" />
+                            { poblacionList.map((item, index) => (
+                                <>
+                                <label key={index}>
+                                    <input type='checkbox' key={index} name="poblacion" value={formDataOsf.poblacion} onChange={handleChangePoblacion} ></input>
+                                    {item}
+                                </label> <br />
+                                </>
+                            ))}
                     </div>
                     <div>
                         <label htmlFor="num_beneficiarios">Número de Beneficiarios:</label>
@@ -205,7 +234,6 @@ const FormsOSF = () => {
                         <label htmlFor="foto1">Foto 1:</label>
                         <input type="file" id="foto1" multiple accept='image/*' onChange={handleFileChange} name="fotos_instalaciones" />
                     </div>
-
                     <div>
                         <label htmlFor="logo_institucion">Logo de la Institución:</label>
                         <input type="file" onChange={handleFileChange} name="logo_institucion" />
@@ -242,11 +270,14 @@ const FormsOSF = () => {
                         <label htmlFor="ine_encargado">INE del Encargado:</label>
                         <input type="file" onChange={handleFileChange} name="ine_encargado" />
                     </div>
+                    </div>
+                    ) }           
                     <button type="submit">Registrar OSF</button>
                 </form>
                 {successMessage}
             </div>
         </div>
+        
     );
 };
 
