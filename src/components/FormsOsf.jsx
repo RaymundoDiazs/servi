@@ -48,10 +48,20 @@ const FormsOSF = () => {
     ]
 
     
-    const [poblacionSelect, setPoblacionSelet] = useState([])
+    const [poblacionSelect, setPoblacionSelect] = useState([])
     
     const handleChangePoblacion = (e) => {
-        console.log("TO DO!!!!!!!")
+        const {value, checked} = e.target
+        
+        setPoblacionSelect((prev) => 
+            checked ? [...prev, value] : prev.filter((v) => v !== value)
+        );
+        
+        
+
+        setFormDataOsf({...formDataOsf, ["poblacion"]: poblacionSelect });
+        // console.log(formDataOsf)
+        
     }
 
 
@@ -180,12 +190,11 @@ const FormsOSF = () => {
                         ))}                    
                     </div>
                     <div>
-                            <label htmlFor="poblacion">Población que atiende:</label>
-                        <input type="text" value={formDataOsf.poblacion} onChange={handleChangeOsf} name="poblacion" />
+                            <label htmlFor="poblacion">Población que atiende:</label> <br />
                             { poblacionList.map((item, index) => (
                                 <>
                                 <label key={index}>
-                                    <input type='checkbox' key={index} name="poblacion" value={formDataOsf.poblacion} onChange={handleChangePoblacion} ></input>
+                                    <input type='checkbox' key={index} name="poblacion" value={item} onChange={handleChangePoblacion} ></input>
                                     {item}
                                 </label> <br />
                                 </>

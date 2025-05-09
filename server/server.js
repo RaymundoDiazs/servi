@@ -112,12 +112,13 @@ app.post('/login', upload.none(), (req, res) => {
               req.session.save(function (err) {
                   if (err) return next(err)
               })
+              req.session.message = 'Session created!';
               res.send(req.session);
           }else{
-              res.status(401).send('Invalid email/password');
+              res.status(401).send({message: 'Invalid email/password'});
           }
       }else{
-          res.status(401).send('Invalid credentials');
+          res.status(401).send({message: 'Invalid credentials'});
       }
   })
   .catch((error) => console.log('ERROR: ', error));
@@ -145,13 +146,13 @@ app.post('/users/osfNuevo', fileFields, function (req, res) {
     // console.log('Body:', req.body);
     // console.log('Files:', req.files);
 
-    // Validate required files
-    if (!req.files.logo_institucion || req.files.logo_institucion.length === 0) {
-        return res.status(400).json({ error: 'Logo de la institución es requerido.' });
-    }
-    if (!req.files.fotos_instalaciones || req.files.fotos_instalaciones.length < 2) {
-        return res.status(400).json({ error: 'Se requieren al menos 2 fotos de las instalaciones.' });
-    }
+    // // Validate required files
+    // if (!req.files.logo_institucion || req.files.logo_institucion.length === 0) {
+    //     return res.status(400).json({ error: 'Logo de la institución es requerido.' });
+    // }
+    // if (!req.files.fotos_instalaciones || req.files.fotos_instalaciones.length < 2) {
+    //     return res.status(400).json({ error: 'Se requieren al menos 2 fotos de las instalaciones.' });
+    // }
 
     const { correo, contrasena, subtipo, nombre, mision, vision, objetivo, ods, poblacion, num_beneficiarios, nombre_responsable, puesto_responsable, correo_responsable,
       telefono, direccion, horario, pagina_web_redes, correo_registro, nombre_encargado, puesto_encargado, telefono_encargado, correo_encargado} = req.body;
@@ -164,7 +165,7 @@ app.post('/users/osfNuevo', fileFields, function (req, res) {
     const ineFileName = req.files.ine_encargado ? req.files.ine_encargado[0].filename : null;
 
     
-    db.none(
+    db.any(
       'SELECT registrar_osf_institucional($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28);',
     [correo, contrasena, nombre, subtipo, mision, vision, objetivo, ods, poblacion, num_beneficiarios, nombre_responsable,
       puesto_responsable, correo_responsable, telefono, direccion, horario, pagina_web_redes, correo_registro, logoFileName, 

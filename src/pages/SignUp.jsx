@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import FormsAlumno from '../components/formsAlumno';
-import FormsOSF from '../components/FormsOSF';
+import FormsOSF from '../components/FormsOsf';
 
 const SignUp = () => {    
     const [userType, setUserType] = useState("");
