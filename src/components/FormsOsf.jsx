@@ -31,6 +31,7 @@ const FormsOSF = () => {
     });
 
     const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
+    const [poblacionSelect, setPoblacionSelect] = useState([])
     const navigate = useNavigate(); // Hook para redirigir
 
     const poblacionList = [
@@ -48,7 +49,6 @@ const FormsOSF = () => {
     ]
 
     
-    const [poblacionSelect, setPoblacionSelect] = useState([])
     
     const handleChangePoblacion = (e) => {
         const {value, checked} = e.target
@@ -190,93 +190,108 @@ const FormsOSF = () => {
                         ))}                    
                     </div>
                     <div>
-                            <label htmlFor="poblacion">Población que atiende:</label> <br />
-                            { poblacionList.map((item, index) => (
-                                <>
-                                <label key={index}>
-                                    <input type='checkbox' key={index} name="poblacion" value={item} onChange={handleChangePoblacion} ></input>
-                                    {item}
-                                </label> <br />
-                                </>
-                            ))}
+                        <label htmlFor="poblacion">1.5 Población que atiende:</label> <br />
+                        {poblacionList.map((item, index) => (
+                            <div  key={index}>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    name="poblacion"
+                                    value={item}
+                                    onChange={handleChangePoblacion}
+                                    />
+                                {item} 
+                            </label> <br />
+                            </div>
+                        ))}
                     </div>
                     <div>
-                        <label htmlFor="num_beneficiarios">Número de Beneficiarios:</label>
+                        <label htmlFor="num_beneficiarios">1.6 Número aproximado de beneficiarios que atiende la Organización anualmente </label>
                         <input type="number" value={formDataOsf.num_beneficiarios} onChange={handleChangeOsf} name="num_beneficiarios" />
                     </div>
                     <div>
-                        <label htmlFor="nombre_responsable">Nombre del Responsable:</label>
+                        <label htmlFor="nombre_responsable">2. Nombre completo del(a) responsable:</label>
                         <input type="text" value={formDataOsf.nombre_responsable} onChange={handleChangeOsf} name="nombre_responsable" />
                     </div>
                     <div>
-                        <label htmlFor="puesto_responsable">Puesto del Responsable:</label>
+                        <label htmlFor="puesto_responsable">3. Puesto del(a) responsable:</label>
                         <input type="text" value={formDataOsf.puesto_responsable} onChange={handleChangeOsf} name="puesto_responsable" />
                     </div>
                     <div>
-                        <label htmlFor="correo_responsable">Correo del Responsable:</label>
+                        <label htmlFor="correo_responsable">4. Correo electrónico del(a) responsable:</label>
                         <input type="email" value={formDataOsf.correo_responsable} onChange={handleChangeOsf} name="correo_responsable" />
                     </div>
                     <div>
-                        <label htmlFor="telefono">Teléfono:</label>
+                        <label htmlFor="telefono">5. Número de teléfono de la Organización:</label>
                         <input type="text" value={formDataOsf.telefono} onChange={handleChangeOsf} name="telefono" />
                     </div>
                     <div>
-                        <label htmlFor="direccion">Dirección:</label>
+                        <label htmlFor="direccion">6. Dirección de oficina de la Organización</label>
                         <textarea value={formDataOsf.direccion} onChange={handleChangeOsf} name="direccion" ></textarea>
                     </div>
                     <div>
-                        <label htmlFor="horario">Horario:</label>
+                        <label htmlFor="horario">6.1 Horario de oficina de la Organización</label>
                         <input type="text" value={formDataOsf.horario} onChange={handleChangeOsf} name="horario" />
                     </div>
                     <div>
-                        <label htmlFor="pagina_web_redes">Página Web o Redes Sociales:</label>
+                        <label htmlFor="pagina_web_redes">7. Página web o redes sociales oficiales de la Organización</label>
                         <input type="text" value={formDataOsf.pagina_web_redes} onChange={handleChangeOsf} name="pagina_web_redes" />
                     </div>
                     <div>
-                        <label htmlFor="correo_registro">Correo de Registro:</label>
+                        <label htmlFor="correo_registro">8. Correo electrónico de la persona que realiza el registro</label>
                         <input type="email" value={formDataOsf.correo_registro} onChange={handleChangeOsf} name="correo_registro" />
                     </div>
-                    <div className="fotos">
-                        <h1>FOTOS DE INSTALACIONES</h1>
-                        <h3>Añade 3 fotografías de las instalaciones de la organización</h3>
+                    <div className="título-documentacion">
+                        <h1>Documentación de la organización</h1>
+                        <h3>En este apartado se solicita adjuntar archivos digitalizados, en caso de no contar con alguno, continuar con los sucesivos. </h3>
+                    </div>
 
-                        <label htmlFor="foto1">Foto 1:</label>
+                    <div>
+                        <label htmlFor="foto1">1. Adjuntar 3 fotografías de sus instalaciones u oficinas:</label>
                         <input type="file" id="foto1" multiple accept='image/*' onChange={handleFileChange} name="fotos_instalaciones" />
                     </div>
                     <div>
-                        <label htmlFor="logo_institucion">Logo de la Institución:</label>
+                        <label htmlFor="logo_institucion">2. Adjuntar Logo de la Organización</label>
                         <input type="file" onChange={handleFileChange} name="logo_institucion" />
                     </div>
                     <div>
-                        <label htmlFor="comprobante_domicilio">Comprobante de Domicilio:</label>
+                        <label htmlFor="comprobante_domicilio">3. Adjuntar Comprobante de domicilio actualizado:</label>
                         <input type="file" onChange={handleFileChange} name="comprobante_domicilio" />
                     </div>
                     <div>
-                        <label htmlFor="RFC">RFC:</label>
+                        <label htmlFor="RFC">4. Adjuntar RFC</label>
                         <input type="file" onChange={handleFileChange} name="RFC" />
                     </div>
+
+                    { formDataOsf.subtipo == "organización" && (
                     <div>
-                        <label htmlFor="acta_constitutiva">Acta Constitutiva:</label>
+                        <label htmlFor="acta_constitutiva">5. Adjuntar Acta Constitutiva:</label>
                         <input type="file" onChange={handleFileChange} name="acta_constitutiva" />
                     </div>
+                    ) }           
+
+                    <div className="título-encargado">
+                        <h1>DATOS DEL ENCARGADO(A) QUE DARÁ SEGUIMIENTO:</h1>
+                        <h3>Para el proceso de colaboración, es necesario designar a un miembro que fungirá como contacto principal y dará seguimiento al proceso. </h3>
+                    </div>                    
                     <div>
-                        <label htmlFor="nombre_encargado">Nombre del Encargado:</label>
+                        <label htmlFor="nombre_encargado">1. Nombre completo:</label>
                         <input type="text" value={formDataOsf.nombre_encargado} onChange={handleChangeOsf} name="nombre_encargado" />
                     </div>
                     <div>
-                        <label htmlFor="puesto_encargado">Puesto del Encargado:</label>
+                        <label htmlFor="puesto_encargado">2. Puesto que desmpeña:</label>
                         <input type="text" value={formDataOsf.puesto_encargado} onChange={handleChangeOsf} name="puesto_encargado" />
                     </div>
                     <div>
-                        <label htmlFor="telefono_encargado">Teléfono del Encargado:</label>
+                        <label htmlFor="telefono_encargado">3. Número de teléfono celular:</label>
                         <input type="text" value={formDataOsf.telefono_encargado} onChange={handleChangeOsf} name="telefono_encargado" />
                     </div>
                     <div>
-                        <label htmlFor="correo_encargado">Correo del Encargado:</label>
+                        <label htmlFor="correo_encargado">4. Correo electrónico</label>
                         <input type="email" value={formDataOsf.correo_encargado} onChange={handleChangeOsf} name="correo_encargado" />
                     </div>
                     <div>
-                        <label htmlFor="ine_encargado">INE del Encargado:</label>
+                        <label htmlFor="ine_encargado">5. Adjuntar Credencial INE</label>
                         <input type="file" onChange={handleFileChange} name="ine_encargado" />
                     </div>
                     </div>
