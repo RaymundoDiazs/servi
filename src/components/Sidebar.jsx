@@ -21,6 +21,9 @@ const Sidebar = () => {
       case "Exportar":
         navigate("/exportar");
         break;
+      case "Crear Proyecto":
+        navigate("/projects/new")
+        break
       default:
         break;
     }
