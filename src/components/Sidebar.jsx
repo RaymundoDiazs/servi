@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
+import { SessionContext } from "../Contexts/SessionContext";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const {sessionType} = useContext(SessionContext)
 
   const handleNavigation = (text) => {
     switch (text) {
@@ -33,6 +35,8 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation List */}
+      {console.log(sessionType)}
+      {sessionType === "ss" && (
       <ul className="sidebar-list">
         {["Proyectos Overview", "Respuestas Alumnos", "Proyectos a revisar", "Exportar"].map(
           (text) => (
@@ -46,6 +50,23 @@ const Sidebar = () => {
           )
         )}
       </ul>
+      )}
+
+      {sessionType === "osf" && (
+      <ul className="sidebar-list">
+        {["Crear Proyecto"].map(
+          (text) => (
+            <li
+              key={text}
+              className="sidebar-item"
+              onClick={() => handleNavigation(text)}
+            >
+              {text}
+            </li>
+          )
+        )}
+      </ul>
+      )}
 
       {/* Decorative Element */}
       <div className="sidebar-decorator" />
