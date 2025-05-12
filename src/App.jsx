@@ -19,7 +19,7 @@ import Logout from "./components/Logout";
 import SignUp from "./pages/SignUp";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SessionProvider } from "./Contexts/SessionContext";
-import Test from "./pages/Test.jsx";
+// import Test from "./pages/Test.jsx";
 import "./App.css";
 
 
@@ -131,7 +131,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/signup" element={<SignUp></SignUp>}></Route>
-            <Route path="/test" element={<Test></Test>}></Route>
+            {/* <Route path="/test" element={<Test></Test>}></Route> */}
           </Routes>
         </Router>
       </BallProvider>

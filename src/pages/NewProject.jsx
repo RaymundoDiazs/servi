@@ -97,6 +97,11 @@ const NewProject = () => {
                     <textarea name="problema_social" value={projectForm.problema_social} onChange={handleFormChange} />
                 </div>
 
+                <div>
+                    <label htmlFor="tipo_vulnerabilidad">Tipo de vulnerabilidad que atenderá este proyecto</label>
+                <input type="text" name="tipo_vulnerabilidad" value={projectForm.tipo_vulnerabilidad} onChange={handleFormChange} />    
+                </div>
+
                 <button type="submit">Create Project</button>
             </form>
         </div>
