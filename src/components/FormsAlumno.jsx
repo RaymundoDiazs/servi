@@ -4,13 +4,15 @@ import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import { SessionContext } from "../Contexts/SessionContext";
 
 const FormsAlumno = () => {
-    const [formData, setFormData] = useState({nombre:'', matricula: '', carrera:'', password: '', numero: '' });
+    const [formData, setFormData] = useState({nombre:'', matricula: '', carrera:'', password: '', numero: '', email: '' });
     const [carrerasArr, setCarrerasArr] = useState([]);
     const [nombre, setNombre] = useState('');
     const [matricula, setMatricula] = useState('');
     const [carrera, setCarrera] = useState('');
     const [password, setPassword] = useState('');
     const [numero, setNumero] = useState('');
+    const [email, setEmail] = useState('');
+    const [termsAccepted, setTermsAccepted] = useState(false);
     const { setSessionType } = useContext(SessionContext);
     const [mensajeMatricula, setMensajeMatricula] = useState(null); 
     const [mensajeNumero, setMensajeNumero] = useState(null);
@@ -25,22 +27,43 @@ const FormsAlumno = () => {
     const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
     const navigate = useNavigate(); // Hook para redirigir
 
+    // Validación de longitud mínima y máxima para el nombre
     const handleNombreChange = (e) => {
-        setNombre(e.target.value);
-        setFormData({ ...formData, nombre: e.target.value }); 
+        const value = e.target.value;
+        const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/;
+        if (value.length < 3 || value.length > 50) {
+            setMensajeError("El nombre debe tener entre 3 y 50 caracteres.");
+            setFormData({ ...formData, nombre: null });
+        } else if (!regex.test(value)) {
+            setMensajeError("El nombre solo puede contener letras y espacios.");
+            setFormData({ ...formData, nombre: null });
+        } else {
+            setMensajeError(null);
+            setFormData({ ...formData, nombre: value });
+        }
+        setNombre(value);
     };
 
-    const handleMatriculaChange = (e) => {
-        const value = e.target.value.toLowerCase(); // Obtén el valor ingresado
-        setMatricula(value); // Actualiza el estado
+    // Validación de duplicados en matrícula
+    const handleMatriculaChange = async (e) => {
+        const value = e.target.value.toLowerCase();
+        setMatricula(value);
 
-        const regex = /^[Aa]01\d{6}$/; 
-        if (!regex.test(value)) { 
+        const regex = /^[Aa]01\d{6}$/;
+        if (!regex.test(value)) {
             setMensajeMatricula("Matrícula inválida. Debe seguir el formato A01XXXXXX.");
-            setFormData({ ...formData, matricula: null }); 
+            setFormData({ ...formData, matricula: null });
         } else {
-            setMensajeMatricula(null);
-            setFormData({ ...formData, matricula: value }); // Actualiza el formData
+            const response = await fetch(`http://localhost:8000/users/checkMatricula/`+value);
+            const exists = await response.json();
+            console.log(exists)
+            if (exists) {
+                setMensajeMatricula("La matrícula ya está registrada.");
+                setFormData({ ...formData, matricula: null });
+            } else {
+                setMensajeMatricula(null);
+                setFormData({ ...formData, matricula: value });
+            }
         }
     };
 
@@ -49,40 +72,56 @@ const FormsAlumno = () => {
         setFormData({ ...formData, carrera: e.target.value });
     };
 
+    // Validación de contraseña segura
     const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
-        setFormData({ ...formData, password: e.target.value });
+        const value = e.target.value;
+        const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!regex.test(value)) {
+            setMensajeError("La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.");
+            setFormData({ ...formData, password: null });
+        } else {
+            setMensajeError(null);
+            setFormData({ ...formData, password: value });
+        }
+        setPassword(value);
     };
 
+    // Validación de número de teléfono internacional
     const handleNumeroChange = (e) => {
-        setNumero(e.target.value);
-        const regex = /^\d{10}$/; // Expresión regular para validar un número de teléfono de 10 dígitos
-        if (!regex.test(e.target.value)) {
-            setMensajeNumero("Número de teléfono inválido. Debe tener 10 dígitos.");
-            setFormData({ ...formData, numero: null }); // Actualiza el formData
+        const value = e.target.value;
+        const regex = /^\+?\d{10,15}$/;
+        if (!regex.test(value)) {
+            setMensajeNumero("Número de teléfono inválido. Debe tener entre 10 y 15 dígitos y puede incluir un prefijo internacional.");
+            setFormData({ ...formData, numero: null });
         } else {
             setMensajeNumero(null);
-            setFormData({ ...formData, numero: e.target.value }); // Actualiza el formData
+            setFormData({ ...formData, numero: value });
         }
+        setNumero(value);
     };
 
-
-
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === "matricula") {
-            const regex = /^[Aa]01\d{6}$/; // Expresión regular para validar si el valor es una matrícula válida
-            if (!regex.test(value)) {
-                setMensajeMatricula("Matrícula inválida. Debe seguir el formato A01XXXXXX.");
-                // return;
-            } else {
-                setMensajeMatricula(null);
-            }
+    // Validación de correo electrónico
+    const handleEmailChange = (e) => {
+        const value = e.target.value;
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regex.test(value)) {
+            setMensajeError("Correo electrónico inválido.");
+            setFormData({ ...formData, email: null });
+        } else {
+            setMensajeError(null);
+            setFormData({ ...formData, email: value });
         }
-        
-        setFormData({ ...formData, [name]: value });
-        console.log(formData)
+        setEmail(value);
+    };
+
+    // Validación de términos y condiciones
+    const handleTermsChange = (e) => {
+        setTermsAccepted(e.target.checked);
+        if (!e.target.checked) {
+            setMensajeError("Debes aceptar los términos y condiciones.");
+        } else {
+            setMensajeError(null);
+        }
     };
 
     const handleSubmitAlumno = (e) => {
@@ -91,8 +130,8 @@ const FormsAlumno = () => {
 
         const allNotNull = Object.values(formData).every((value) => value !== null && value !== '');
         
-        if (!allNotNull) {
-            setMensajeError("Por favor completa todos los campos requeridos.");
+        if (!allNotNull || !termsAccepted) {
+            setMensajeError("Por favor completa todos los campos requeridos y acepta los términos y condiciones.");
             return;
         } else {
             setMensajeError(null);
@@ -200,6 +239,30 @@ const FormsAlumno = () => {
                         onChange={handlePasswordChange}
                         required
                     />
+                </div>
+                <div>
+                    <label htmlFor="email">Correo electrónico:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={email}
+                        onChange={handleEmailChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            name="terms"
+                            checked={termsAccepted}
+                            onChange={handleTermsChange}
+                            required
+                        />
+                        Acepto los términos y condiciones
+                    </label>
                 </div>
                 <button type="submit">Sign Up</button>
             </form>

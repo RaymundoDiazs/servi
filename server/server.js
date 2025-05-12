@@ -134,6 +134,19 @@ app.post('/users/alumnoNuevo', upload.none(), function(req, res){
   .catch((error) => console.log('ERROR: ', error));
 });
 
+app.get('/users/checkMatricula/:matricula', (req, res) => {
+  const {matricula} = req.params;
+  db.oneOrNone("SELECT * FROM alumno WHERE alumno_id=$1", [matricula])
+  .then((data) => {
+      if (data != null){
+          res.status(200).send(true);
+      }else{
+          res.status(200).send(false);
+      }
+  })
+  .catch((error) => console.log('ERROR: ', error));
+});
+
 const fileFields = upload.fields([
     { name: 'logo_institucion', maxCount: 1 },
     { name: 'fotos_instalaciones', maxCount: 3 },
