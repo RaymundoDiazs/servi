@@ -62,7 +62,9 @@ app.use(express.json());
 app.get('/session/detail', authenticateSession, (req, res) => {
   res.json({ message: 'TEST DE SESIÓN :D, SI VES ESTO HAY UNA SESIÓN ACTIVA, LA SESIÓN EXPIRARÁ EN '+req.session.cookie.expires.getHours()+" HORAS",
     tipo: req.session.tipo,
-    correo: req.session.correo
+    correo: req.session.correo,
+    user_id: req.session.user_id,
+    expires: req.session.cookie.expires,
   });
   // res.json({ message: String(req.session.cookie.expires.getHours())});
   // console.log( req.session.cookie.expires.getSeconds())
