@@ -8,14 +8,13 @@ const pgSession = require('connect-pg-simple')(session);
 app.use(cors({origin: 'http://localhost:5173', credentials: true}));
 app.use(express.json());
 const multer = require('multer');
-const { data } = require('react-router');
 
 const storage = multer.diskStorage({
   destination: '../src/assets',
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
+  filename: function (req, file, cb){
+  cb(null, file.originalname)
   }
-});
+  });
   
 
 const upload = multer({storage: storage});
@@ -62,9 +61,7 @@ app.use(express.json());
 app.get('/session/detail', authenticateSession, (req, res) => {
   res.json({ message: 'TEST DE SESIÓN :D, SI VES ESTO HAY UNA SESIÓN ACTIVA, LA SESIÓN EXPIRARÁ EN '+req.session.cookie.expires.getHours()+" HORAS",
     tipo: req.session.tipo,
-    correo: req.session.correo,
-    user_id: req.session.user_id,
-    expires: req.session.cookie.expires,
+    correo: req.session.correo
   });
   // res.json({ message: String(req.session.cookie.expires.getHours())});
   // console.log( req.session.cookie.expires.getSeconds())
@@ -92,13 +89,6 @@ app.get('/proyecto_carrera/:proyecto_id', (req, res) => {
     .catch((error) => console.log('ERROR:', error));
 })
 
-// fetch de los ods :$
-app.get('/ods', (req, res) => {
-  db.any('SELECT * FROM objetivos_desarrollo_sostenible')
-  .then((data) => res.json(data))
-  .catch((error ) => console.log('ERROR:', error))
-})
-
 // login
 app.post('/login', upload.none(), (req, res) => {
   const {username, password} = req.body;
@@ -114,13 +104,12 @@ app.post('/login', upload.none(), (req, res) => {
               req.session.save(function (err) {
                   if (err) return next(err)
               })
-              req.session.message = 'Session created!';
               res.send(req.session);
           }else{
-              res.status(401).send({message: 'Invalid email/password'});
+              res.status(401).send('Invalid email/password');
           }
       }else{
-          res.status(401).send({message: 'Invalid credentials'});
+          res.status(401).send('Invalid credentials');
       }
   })
   .catch((error) => console.log('ERROR: ', error));
@@ -132,66 +121,6 @@ app.post('/users/alumnoNuevo', upload.none(), function(req, res){
   db.none("CALL registrar_alumno($1, $2, $3, $4, $5);", [matricula, carrera, nombre, numero, password])
   .then(() => res.status(200).send('Usuario creado'))
   .catch((error) => console.log('ERROR: ', error));
-});
-
-app.get('/users/checkMatricula/:matricula', (req, res) => {
-  const {matricula} = req.params;
-  db.oneOrNone("SELECT * FROM alumno WHERE alumno_id=$1", [matricula])
-  .then((data) => {
-      if (data != null){
-          res.status(200).send(true);
-      }else{
-          res.status(200).send(false);
-      }
-  })
-  .catch((error) => console.log('ERROR: ', error));
-});
-
-const fileFields = upload.fields([
-    { name: 'logo_institucion', maxCount: 1 },
-    { name: 'fotos_instalaciones', maxCount: 3 },
-    { name: 'comprobante_domicilio', maxCount: 1 },
-    { name: 'RFC', maxCount: 1 },
-    { name: 'acta_constitutiva', maxCount: 1 },
-    { name: 'ine_encargado', maxCount: 1 },
-]);
-
-app.post('/users/osfNuevo', fileFields, function (req, res) {
-    console.log('Processing /users/osfNuevo request...');
-    // console.log('Body:', req.body);
-    // console.log('Files:', req.files);
-
-    // // Validate required files
-    // if (!req.files.logo_institucion || req.files.logo_institucion.length === 0) {
-    //     return res.status(400).json({ error: 'Logo de la institución es requerido.' });
-    // }
-    // if (!req.files.fotos_instalaciones || req.files.fotos_instalaciones.length < 2) {
-    //     return res.status(400).json({ error: 'Se requieren al menos 2 fotos de las instalaciones.' });
-    // }
-
-    const { correo, contrasena, subtipo, nombre, mision, vision, objetivo, ods, poblacion, num_beneficiarios, nombre_responsable, puesto_responsable, correo_responsable,
-      telefono, direccion, horario, pagina_web_redes, correo_registro, nombre_encargado, puesto_encargado, telefono_encargado, correo_encargado} = req.body;
-
-    const logoFileName = req.files.logo_institucion[0].filename;
-    const fotosFileNames = req.files.fotos_instalaciones.map(file => file.filename);
-    const comprobanteFileName = req.files.comprobante_domicilio ? req.files.comprobante_domicilio[0].filename : null;
-    const rfcFileName = req.files.RFC ? req.files.RFC[0].filename : null;
-    const actaFileName = req.files.acta_constitutiva ? req.files.acta_constitutiva[0].filename : null;
-    const ineFileName = req.files.ine_encargado ? req.files.ine_encargado[0].filename : null;
-
-    
-    db.any(
-      'SELECT registrar_osf_institucional($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28);',
-    [correo, contrasena, nombre, subtipo, mision, vision, objetivo, ods, poblacion, num_beneficiarios, nombre_responsable,
-      puesto_responsable, correo_responsable, telefono, direccion, horario, pagina_web_redes, correo_registro, logoFileName, 
-      comprobanteFileName, rfcFileName, actaFileName, fotosFileNames, nombre_encargado, puesto_encargado, telefono_encargado,
-      correo_encargado, ineFileName
-    ])
-        .then(() => res.status(200).send('Usuario OSF creado'))
-        .catch(error => {
-            console.log('ERROR: ', error);
-            res.status(500).send('Error al registrar el OSF.');
-        });
 });
 
 // logout
