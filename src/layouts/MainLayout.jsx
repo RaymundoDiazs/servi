@@ -26,7 +26,7 @@ export default function MainLayout({ children }) {
 
   return (
     <div className="app" style={{ display: "flex" }}>
-      {showSidebar && <Sidebar />}
+      {showSidebar && sessionType !== "alumno" && <Sidebar />}
       <div className="content" style={{ flex: 1, position: "relative" }}>
         
         {/* teus modos */}
