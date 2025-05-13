@@ -40,13 +40,13 @@ const frases = [
 
 
 
-  // === Buscar objetivos en la pagina (distintas clases, por añadir mas) ===
+  // === Buscar objetivos en la página ===
   useEffect(() => {
     const allTargets = [
       ...document.querySelectorAll(".main-card"),
       ...document.querySelectorAll(".related-card"),
-      ...document.querySelectorAll(".MuiGrid-item"), //si en / también hay tarjetas
-      ...document.querySelectorAll(".dashboard-card"), // i en dashboard también
+      ...document.querySelectorAll(".MuiGrid-item"), // si en / también hay tarjetas
+      ...document.querySelectorAll(".dashboard-card"), // si en dashboard también
     ];
 
     const sorted = allTargets.sort((a, b) => {
@@ -58,7 +58,7 @@ const frases = [
     setTargets(sorted);
   }, [location]);
 
-  // ===movimiento automatico hacia ciertos objetivos ===
+  // === Movimiento automático hacia objetivos ===
   useEffect(() => {
     if (targets.length === 0) return;
 
@@ -76,7 +76,7 @@ const frases = [
       const dist = Math.hypot(dx, dy);
 
 
-      //Si inspecciona (es un estado), hablar y otras funciones
+      //Si inspecciona (estado), hablar y otras funciones
       if (dist < 10 && !isInspecting) {
         setIsInspecting(true);
 setSpeechText(frases[Math.floor(Math.random() * frases.length)]);
@@ -112,7 +112,7 @@ setTimeout(() => {
     return () => clearInterval(interval);
   }, [targets, currentTargetIndex, position, isInspecting]);
 
-  // === Animacion de sprite ===
+  // === Animación de sprite ===
   useEffect(() => {
     const frames = isGoingUp
       ? jetpack

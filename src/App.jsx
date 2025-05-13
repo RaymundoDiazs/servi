@@ -13,9 +13,10 @@ import RespuestasAlumnos from "./tools/RespuestasAlumnos";
 import { BallProvider } from "./Contexts/BallContext";
 import ProjectDetail from "./pages/ProjectDetail";
 //import RightBar from "./components/RightBar";
+import FormOSF from "./pages/FormOSF";
 import Login from "./pages/Login";
 import Logout from "./components/Logout";
-import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SessionProvider } from "./Contexts/SessionContext";
 import "./App.css";
@@ -119,11 +120,12 @@ export default function App() {
             <Route path="/dashboard" element={ <MainLayout> <Dashboard /> </MainLayout> } />
             <Route path="/respuesta_alumnos" element={ <MainLayout> <RespuestasAlumnos /> </MainLayout> } />
             <Route path="/projects/:id" element={ <MainLayout> <ProjectDetail /> </MainLayout> } />
+            <Route path="/formosf" element={ <MainLayout> <FormOSF /> </MainLayout> } />
             
             {/* Rutas públicas sin layout */}
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/signup" element={<SignUp></SignUp>}></Route>
+            <Route path="/signin" element={<SignIn></SignIn>}></Route>
           </Routes>
         </Router>
       </BallProvider>

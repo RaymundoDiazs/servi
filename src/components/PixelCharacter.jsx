@@ -29,8 +29,8 @@ const jetpackFrames = ["jetpackx1.png", "jetpackx2.png", "jetpackx3.png", "jetpa
 const fallFrames = [
   "fall1.png","fall2.png","fall3.png","fall4.png","fall5.png"];
 
-  const PixelCharacter = ({ userType, hoveredType }) => {
-    const { ballPos, depositPoint, entregando, setBallPos, setDepositPoint, setEntregando,ballLanded,
+const PixelCharacter = () => {
+  const { ballPos, depositPoint, entregando, setBallPos, setDepositPoint, setEntregando,ballLanded,
     setBallLanded, } = useContext(BallContext);
 
 
@@ -54,15 +54,6 @@ const fallFrames = [
   const initialYRef = useRef(null);
   const [currentLevel, setCurrentLevel] = useState(0);
   const targetStep = 495; //317 cards pevias //Var de valor de bajada
-
-
-  //Estado para detectar scrolls y evitar bugs
-  const isScrollingRef = useRef(false);
-
-  //Detecta movimineto vertical
-  const isAnimatingVerticalRef = useRef(false);
-
-
 
   //Hablar
   const [showSpeech, setShowSpeech] = useState(false);
@@ -212,82 +203,6 @@ useEffect(() => {
 }, [location]);
 
 
- // =============================== //
-// SIGNUP: hover frases y animación
-// =============================== //
-useEffect(() => {
-  if (location.pathname !== "/signup") return;
-
-  if (hoveredType === "alumno") {
-    setSpeechText("¿Listo para registrar proyectos y hacer un cambio? ");
-    setShowSpeech(true);
-  } else if (hoveredType === "osf") {
-    setSpeechText("¡Gracias por apoyar! ");
-    setShowSpeech(true);
-  } else if (hoveredType === "limpiar") {
-    setSpeechText("¿Cambiaste de opinión? ");
-    setShowSpeech(true);
-  } else {
-    setShowSpeech(false);
-  }
-}, [hoveredType, location]);
-
-// =============================== //
-// SIGNUP: jetpack junto a campo activo
-// =============================== //
-useEffect(() => {
-  if (location.pathname !== "/signup" || !userType) return;
-
-  const inputs = Array.from(document.querySelectorAll(".signup-card-right input, .signup-card-right select, .signup-card-right textarea"));
-  if (!inputs.length) return;
-
-  const handleFocus = (e) => {
-    const rect = e.target.getBoundingClientRect();
-    const fieldX = rect.left - 40; // izquierda del input
-    const fieldY = rect.top + window.scrollY - 32;
-
-    setTargetX(fieldX);
-    const diffY = fieldY - groundY;
-
-    if (Math.abs(diffY) > 10) {
-      isJumpingRef.current = true;
-      animateGroundYTo(fieldY, () => {
-        isJumpingRef.current = false;
-      });
-    } else {
-      animateGroundYTo(fieldY);
-    }
-
-    // Mostrar texto del campo
-    const label = e.target.closest("div")?.querySelector("label")?.innerText;
-    if (label) {
-      setSpeechText(`Campo: ${label}`);
-      setShowSpeech(true);
-    }
-  };
-
-  const handleBlur = () => setShowSpeech(false);
-
-  inputs.forEach((input) => {
-    input.addEventListener("focus", handleFocus);
-    input.addEventListener("blur", handleBlur);
-  });
-
-  return () => {
-    inputs.forEach((input) => {
-      input.removeEventListener("focus", handleFocus);
-      input.removeEventListener("blur", handleBlur);
-    });
-  };
-}, [location, userType, groundY]);
-
-
-
-//console.log("🚀 Texto:", speechText, "| Mostrar:", showSpeech);
-
-
-
-
 // =============================== //
 // IA: movimiento desde PyTorch (vista proyectos)
 // =============================== //
@@ -298,7 +213,7 @@ useEffect(() => {
 
   const interval = setInterval(async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/predict-direction"
+      const res = await fetch("http://127.0.0.1:5000/predict-direction"
 , {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -405,7 +320,6 @@ if (depositPoint && entregando) {
   // =============================== //
   // PROYECTOS: comportamiento interactivo
   // =============================== //
-  //Es el responsable de hacer que el personaje siga al Mouse
   useEffect(() => {
     if (location.pathname !== "/") return;
     const handleMouseMove = (e) => {
@@ -543,65 +457,6 @@ if (depositPoint && entregando) {
 // DASHBOARD: seguir tarjetas y moverse entre filas (jetpac)
 // =============================== //
 
-useEffect(() => {
-  if (location.pathname !== "/dashboard") return;
-
-  const handleScroll = () => {
-    const header = document.querySelector("header");
-    if (!characterRef.current || !header) return;
-
-    const characterTop = characterRef.current.getBoundingClientRect().top;
-    const headerBottom = header.getBoundingClientRect().bottom;
-    const isHeaderCovering = characterTop <= headerBottom;
-    const canScrollDownMore = window.innerHeight + window.scrollY < document.body.scrollHeight;
-
-    // 🔒 Evitar múltiples triggers conflictivos
-    if (isScrollingRef.current || isDescendingRef.current || isGoingUpRef.current || isJumpingRef.current) return;
-
-    if (isHeaderCovering && canScrollDownMore) {
-      isScrollingRef.current = true;
-      isDescendingRef.current = true;
-
-      setCurrentLevel((prev) => {
-        const newLevel = prev + 1;
-        const newY = initialYRef.current + newLevel * targetStep;
-        animateGroundYTo(newY, () => {
-          isScrollingRef.current = false;
-          isDescendingRef.current = false;
-        });
-        return newLevel;
-      });
-    }
-
-    const scrollThresholdToReturn = initialYRef.current + (currentLevel - 1) * targetStep;
-
-    if (window.scrollY < scrollThresholdToReturn - 50 && currentLevel > 0) {
-      isScrollingRef.current = true;
-      isGoingUpRef.current = true;
-
-      setCurrentLevel((prev) => {
-        const newLevel = prev - 1;
-        const newY = initialYRef.current + newLevel * targetStep;
-        animateGroundYTo(newY, () => {
-          isScrollingRef.current = false;
-          isGoingUpRef.current = false;
-        });
-        return newLevel;
-      });
-    }
-  };
-
-  window.addEventListener("scroll", handleScroll);
-  window.addEventListener("resize", handleScroll);
-  return () => {
-    window.removeEventListener("scroll", handleScroll);
-    window.removeEventListener("resize", handleScroll);
-  };
-}, [location, currentLevel]);
-
-
-
-
 
 useEffect(() => {
   if (location.pathname !== "/dashboard") return;
@@ -699,8 +554,7 @@ useEffect(() => {
 
   // =============================== //
   // Animacion general
-
-/*
+  // =============================== //
   useEffect(() => {
     const frames =
       isJumpingRef.current
@@ -713,42 +567,20 @@ useEffect(() => {
         ? walkFramesRight
         : walkFramesLeft;
 
-        */
+        if (!isMoving && !isInspecting && !isJumpingRef.current) {
+          // ❗️ Evita detener completamente la animación en rutas como /projects/:id
+          if (location.pathname.startsWith("/projects/")) return;
+          setFrame(0);
+          return;
+        }
+        
 
-  // =============================== //
-  useEffect(() => {
-    const isSignupJetpack = location.pathname === "/signup" && userType;
-  
-    const frames =
-      isJumpingRef.current || isSignupJetpack
-        ? jetpackFrames
-        : isInspecting
-        ? direction === "right"
-          ? lupiFramesRight
-          : lupiFramesLeft
-        : direction === "right"
-        ? walkFramesRight
-        : walkFramesLeft;
-  
-    const shouldAnimate =
-      isMoving ||
-      isInspecting ||
-      isJumpingRef.current ||
-      isSignupJetpack;
-  
-    if (!shouldAnimate) {
-      if (location.pathname.startsWith("/projects/")) return;
-      setFrame(0);
-      return;
-    }
-  
     const animInterval = setInterval(() => {
       setFrame((prev) => (prev + 1) % frames.length);
-    }, 150); // puedes ajustar la velocidad aquí
-  
+    }, 150); //Cambiar velocidad
+
     return () => clearInterval(animInterval);
-  }, [isMoving, isInspecting, direction, location, userType]); // ✅ ESTA ES LA ÚNICA CIERRE QUE NECESITAS
-  
+  }, [isMoving, isInspecting, direction, location]);
 
   // =============================== //
   // SPRITE ACTUAL
@@ -761,31 +593,29 @@ useEffect(() => {
     ? walkFramesRight
     : walkFramesLeft;
 
-    const currentSprite =
-    (location.pathname === "/dashboard" && (isJumpingRef.current || isAnimatingVerticalRef.current)) ||
-    (location.pathname === "/signup" && userType) ||
-    isGoingUpRef.current
+  const currentSprite =
+    location.pathname === "/dashboard" && isJumpingRef.current
+      ? jetpackFrames[frame % jetpackFrames.length]
+      : isGoingUpRef.current
       ? jetpackFrames[frame % jetpackFrames.length]
       : isDescendingRef.current
       ? lianaFrames[frame % lianaFrames.length]
       : isInspecting && !isMoving
       ? currentFrames[staticInspectFrame]
       : currentFrames[frame];
-  
+
+
 
 
   // =============================== //
   // Movimiento vertical suave
   // =============================== //
   const animateGroundYTo = (targetY, onFinish) => {
-    isAnimatingVerticalRef.current = true; // ← 🔒 indicar que está animando
-  
     const interval = setInterval(() => {
       setGroundY((prev) => {
         const diff = targetY - prev;
         if (Math.abs(diff) < 3) {
           clearInterval(interval);
-          isAnimatingVerticalRef.current = false; // ← 🔓 terminó animación
           onFinish?.();
           return targetY;
         }
@@ -793,8 +623,6 @@ useEffect(() => {
       });
     }, 20);
   };
-  
-  
 
   const shouldFlip = (sprite) => {
     if (!sprite) return false;
@@ -819,10 +647,7 @@ useEffect(() => {
   
   
   const isFlipped = direction === "left" && shouldFlip(currentSprite);
-
-  //Si se esta en signup y hay un userType, regresar a globos pequeños
-  const isSignup = location.pathname === "/signup";
-const isBigSignup = isSignup && !userType;
+  
 
   
 
@@ -839,40 +664,25 @@ const isBigSignup = isSignup && !userType;
     left: position.x,
     top: falling ? groundY + fallOffset : groundY,
     transform: `
-      translateX(-50%)
-      ${isFlipped ? " scaleX(-1)" : ""}
-      ${
-        location.pathname === "/signup"
-          ? " scale(2.3)" // 👉 SOLO en /signup lo agrandamos
-          : falling
-          ? ""
-          : location.pathname.startsWith("/projects/")
+    translateX(-50%)
+    ${isFlipped ? " scaleX(-1)" : ""}
+    ${
+      falling
+        ? "" // Si está cayendo, NO aplicar ninguna escala
+        : location.pathname.startsWith("/projects/")
           ? ""
           : isGoingUpRef.current
-          ? " scale(1.1)"
-          : isDescendingRef.current
-          ? " scale(6)"
-          : ""
-      }
-    `,
-    //Si ta se escogio un usertype, volvera  a su tamaño original
-    width:
-  location.pathname === "/signup"
-    ? userType
-      ? 32  // ✅ pequeño si ya eligió
-      : 180 // ✅ grande si no ha elegido
-    : 64,   // ✅ tamaño normal en dashboard y otras rutas
-
-height:
-  location.pathname === "/signup"
-    ? userType
-      ? 32
-      : 180
-    : 64,
-
+            ? " scale(1.1)"
+            : isDescendingRef.current
+            ? " scale(6)"
+            : ""
+    }
+  `
+  ,
   
   
-  
+    width: falling ? 54 : 64,
+    height: falling ? 54 : 64,
     objectFit: "contain",
     imageRendering: "pixelated",
     pointerEvents: "none",
@@ -882,43 +692,33 @@ height:
 
 
 
-
   
 
 
   
   {/* Globo de texto */}
   {showSpeech && (
-  <div
-    className="lupi-speech"
-    style={{
-      position: "absolute",
-      top: isSignup ? groundY - (isBigSignup ? 150 : 50) : groundY - 50,
-      left: isSignup ? position.x - (isBigSignup ? 260 : -30) : position.x + 30,
-      padding: isBigSignup ? "12px 20px" : "6px 10px",
-      background: "white",
-      color: "#1e293b",
-      borderRadius: "14px",
-      fontSize: isBigSignup ? "16px" : "12px",
-      boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-      pointerEvents: "none",
-      zIndex: 1000,
-      maxWidth: "260px",
-      lineHeight: "1.3",
-      fontWeight: 700,
-      whiteSpace: "normal",
-      wordWrap: "break-word",
-      textAlign: "right",
-    }}
-  >
-    {speechText}
-  </div>
-)}
-
-
-
-
-
+    <div
+     className="lupi-speech"
+      style={{
+        position: "absolute",
+        top: groundY - 50,
+        left: position.x + 30,
+        padding: "6px 10px",
+        background: "white",
+        color: "#1e293b",
+        borderRadius: "10px",
+        fontSize: "12px",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+        pointerEvents: "none",
+        zIndex: 1000,
+        whiteSpace: "nowrap",
+        fontWeight: 600,
+      }}
+    >
+      {speechText}
+    </div>
+  )}
 
   
 

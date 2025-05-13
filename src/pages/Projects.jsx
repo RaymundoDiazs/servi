@@ -9,12 +9,6 @@ import { FaPerson } from "react-icons/fa6";
 import { FilterList } from "@mui/icons-material";
 import { SessionContext } from "../Contexts/SessionContext";
 import "./Projects.css";
-import ProjectModal from "../pages/ProjectModal"; // ajusta la ruta si es necesario
-import Hero from "../components/Hero"; // ajusta la ruta si es necesario
-
-
-
-
 
 const Projects = () => {
   const [projectsDb, setProjectsDb] = useState([]);
@@ -28,23 +22,7 @@ const Projects = () => {
   const [edadRange, setEdadRange] = useState([0, 100]);
   const [valoresSeleccionados, setValoresSeleccionados] = useState([]);
   const { sessionType } = useContext(SessionContext);
-  //const navigate = useNavigate(); //Sin navegacion ahora solo abre un modal
-
-  const [proyectoSeleccionado, setProyectoSeleccionado] = useState(null); //Para el model dependiendo el proyect
-  const [searchText, setSearchText] = useState(""); //Dar funcionamiento a el campo de busqueda de HERO
-
-
-
-  useEffect(() => {
-    const handler = (e) => {
-      setProyectoSeleccionado(e.detail); // Abrir nuevo proyecto desde rpoyectos relacinoados
-    };
-    window.addEventListener("abrir-proyecto", handler);
-    return () => window.removeEventListener("abrir-proyecto", handler);
-  }, []);
-  
-
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8000/proyectos")
@@ -64,14 +42,10 @@ const Projects = () => {
       });
   }, []);
 
- 
-
   const handleModalidadChange = (e) => setModalidadFilter(e.target.value);
   const handleCarreraClick = (carrera) => setCarreraFilter(carrera === carreraFilter ? "" : carrera);
 
   const filteredProjects = projectsDb.filter((project) => {
-
-    const matchTitle = project.title.toLowerCase().includes(searchText.toLowerCase());
     const horas = parseInt(project.horas);
     const edad = parseInt(project.rango_edad);
     const matchHorasMin = horasMin === "" || horas >= parseInt(horasMin);
@@ -79,9 +53,8 @@ const Projects = () => {
     const matchEdad = !isNaN(edad) && edad >= edadRange[0] && edad <= edadRange[1];
     const matchModalidad = modalidadFilter === "Todos" || project.modalidad === modalidadFilter;
     const matchValores = valoresSeleccionados.length === 0 || valoresSeleccionados.includes(project.valor_promueve);
-    return matchTitle && matchHorasMin && matchHorasMax && matchEdad && matchModalidad && matchValores;
+    return matchHorasMin && matchHorasMax && matchEdad && matchModalidad && matchValores;
   });
-  
 
   useEffect(() => {
     let interval;
@@ -101,11 +74,6 @@ const Projects = () => {
 
   return (
     <Box className="projects-page">
-
-<Hero searchText={searchText} setSearchText={setSearchText} /> 
-
-
-      
       <Box className="projects-header">
         <Typography variant="h4">Proyectos Solidarios - {sessionType}</Typography>
         <Button variant="outlined" startIcon={<FilterList />} onClick={() => setDrawerOpen(true)}>Filtros Avanzados</Button>
@@ -113,7 +81,7 @@ const Projects = () => {
 
       <Box sx={{ display: "flex", justifyContent: "center", mb: 5 }}>
   <Box
-    className="notch-elevated" // Clase para filtros bonitos
+    className="notch-elevated" // 👈 Agregamos aquí
     sx={{
       display: "flex",
       flexWrap: "wrap",
@@ -121,17 +89,15 @@ const Projects = () => {
       gap: 2,
       px: 3,
       py: 2,
-      borderRadius: 4, // 
-      backgroundColor: "rgba(255,255,255,0.5)", // glassy
+      borderRadius: 4, // 🔵 Bien redondeado
+      backgroundColor: "rgba(255,255,255,0.5)", // 🔵 Glassy
       backdropFilter: "blur(12px)", // 🔵 Blur
       border: "1px solid rgba(255,255,255,0.3)",
-      boxShadow: "0 8px 32px rgba(0,0,0,0.1)", // Elevación bonita
-      
+      boxShadow: "0 8px 32px rgba(0,0,0,0.1)", // 🔵 Elevación bonita
     }}
-    
   >
-<Button className={`glass-button-projects ${modalidadFilter === "Todos" ? "active" : ""}`}>
-Todos
+    <Button className={`glass-button ${modalidadFilter === "Todos" ? "active" : ""}`} onClick={() => setModalidadFilter("Todos")}>
+      Todos
     </Button>
     <Select value={modalidadFilter} onChange={handleModalidadChange} displayEmpty className="glass-select">
       <MenuItem value="Todos">Todos</MenuItem>
@@ -140,17 +106,14 @@ Todos
     </Select>
     {["ARQ", "LAD", "ISC", "MKT", "DER", "PSI"].map((carrera, idx) => (
       <Button
-      key={carrera}
-      className={`glass-buttonProjects ${carreraFilter === carrera ? "active" : ""}`}
-      onClick={() => handleCarreraClick(carrera)}
-      sx={{ "--hue": idx * 45 }}
-    >
-      {carrera}
-    </Button>
-
-      
+        key={carrera}
+        className={`glass-button ${carreraFilter === carrera ? "active" : ""}`}
+        onClick={() => handleCarreraClick(carrera)}
+        sx={{ "--hue": idx * 45 }}
+      >
+        {carrera}
+      </Button>
     ))}
-
   </Box>
 </Box>
 
@@ -162,9 +125,7 @@ Todos
               <Grid item xs={12} sm={6} md={4} lg={3}>
               <Card
               //Desde ACA EMPIEZA TODA EL elemento CARD, no es posible realizar algo similar desde un CSS
-          //onClick={() => navigate(`/projects/${project.id}`)} //Quitamos navigate para usar el modal
-          onClick={() => setProyectoSeleccionado(project)}
-
+          onClick={() => navigate(`/projects/${project.id}`)}
           onMouseEnter={() => setHoveredId(project.id)}
           onMouseLeave={() => setHoveredId(null)}
           sx={{
@@ -536,22 +497,6 @@ Todos
     </Button>
   </Box>
 </Drawer>
-
-      {/*Modal para Proyectos
-            <ProjectModal proyecto={proyectoSeleccionado} onClose={() => setProyectoSeleccionado(null)} />
-
-      */}
-{proyectoSeleccionado && (
-  <ProjectModal
-    proyecto={proyectoSeleccionado}
-    onClose={() => setProyectoSeleccionado(null)}
-    proyectosDisponibles={projectsDb} // ✅ Este sí es el array completo de proyectos
-  />
-)}
-
-
-
-
 
 
     </Box>

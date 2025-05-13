@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { projects } from "../data/projects";
 import "./ProjectDetail.css";
 
-
 import {
   FiClipboard,
   FiMapPin,
@@ -35,7 +34,6 @@ const ProjectDetail = () => {
   const [balls, setBalls] = useState([]);
   const [showAllPhotos, setShowAllPhotos] = useState(false); 
 const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
-
 
 
   const containerRef = useRef(null);
@@ -161,8 +159,6 @@ const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
 
   </div>
 </section>
-
-
 
 
 {/* NUEVO CONTENIDO: VA FUERA DEL HERO */}
