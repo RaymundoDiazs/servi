@@ -117,110 +117,51 @@
   background-color: #5a67d8;
 }
 
-.sprite-decorativo {
-  position: relative;
-  top: 20px;
-  left: 150px; 
-  height: 40px;
-  display: block;
-  margin: 0 auto;
-}
-
-
-
-
-.input-group label {
-  margin-bottom: 0.2rem; 
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #555;
-}
-
-
-.input-group label {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #555;
-}
-
-.input-with-sprite {
-  position: relative;
-}
-
-.sprite-decorativo {
-  position: relative;
-  top: -80px;
-  right: 150px;
-  height: 40px;
-  pointer-events: none;
-  transition: transform 0.3s ease;
-}
-
-.input-text {
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid #ccc;
-  border-radius: 1rem;
-  font-size: 1rem;
-}
-
-
- /* === BOTONES FLOTANTES === */
- .floating-actions {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-
-.glass-button {
-  background-color: #e0e7ff !important; /* 💙 Azul suave pastel */
-  color: #1e3a8a !important;           /* Texto azul más fuerte */
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 999px;
-  font-weight: bold;
-  font-size: 1rem;
-  text-align: center;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  width: 100%;
-  cursor: pointer;
-}
-
-.glass-button:hover {
-  background-color: #fcd34d !important; /* 💛 Amarillo pastel */
-  color: #111 !important;
-  transform: scale(1.05);
-}
-
-
-
-
-.glass-button.active {
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
-  color: white;
-}
-
-.login-toggle-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-/* Estilo moderno para botones tipo signup */
-.signup-toggle-buttons button {
-  background-color: #e0e7ff; /* 💙 ese azul pastel */
-  color: #1e3a8a;
-}
-
-
-.login-toggle-buttons .glass-button {
-  display: block;
-  width: 100%;
-}
+  .sprite-decorativo {
+    position: relative;
+    top: 20px;
+    left: 150px; 
+    height: 40px;
+    display: block;
+    margin: 0 auto;
+  }
+  
+ 
+  
+  
+  .input-group label {
+    margin-bottom: 0.2rem; 
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+  }
+  
+  
+  .input-group label {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+  }
+  
+  .input-with-sprite {
+    position: relative;
+  }
+  
+  .sprite-decorativo {
+    position: relative;
+    top: -80px;
+    right: 150px;
+    height: 40px;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+  }
+  
+  .input-text {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    font-size: 1rem;
+  }
+  
