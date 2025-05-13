@@ -11,47 +11,49 @@ import { SessionContext } from "../Contexts/SessionContext";
 
 
 export default function MainLayout({ children }) {
-  const [showSidebar, setShowSidebar] = useState(true);
-  const [showCharacter, setShowCharacter] = useState(false);
-  const [showAICharacter, setShowAICharacter] = useState(false);
-  const [showPetMode, setShowPetMode] = useState(false);
-  const [rightMenuOpen, setRightMenuOpen] = useState(false);
+  const [uiState, setUiState] = useState({
+    showSidebar: true,
+    showCharacter: false,
+    showAICharacter: false,
+    showPetMode: false,
+    rightMenuOpen: false,
+  });
+
+  const toggleUIState = (key) => {
+    setUiState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
+  };
 
   const location = useLocation();
   const { sessionType } = useContext(SessionContext)
 
-  const toggleSidebar = () => setShowSidebar(!showSidebar);
-  const toggleCharacter = () => setShowCharacter((prev) => !prev);
-  const toggleAI = () => setShowAICharacter((prev) => !prev);
-
   return (
     <div className="app" style={{ display: "flex" }}>
-      {showSidebar && sessionType !== "alumno" && <Sidebar />}
+      {uiState.showSidebar && sessionType !== "alumno" && <Sidebar />}
       <div className="content" style={{ flex: 1, position: "relative" }}>
         
         {/* teus modos */}
-        {showCharacter && <PixelCharacter />}
+        {uiState.showCharacter && <PixelCharacter />}
 
 
 
-        {showAICharacter && <PixelCharacterAI />}
-        {showPetMode && <PetMode />}
+        {uiState.showAICharacter && <PixelCharacterAI />}
+        {uiState.showPetMode && <PetMode />}
 
         {/* Header con botones para abrir el RightBar */}
         <Header
-          onMenuClick={toggleSidebar}
-          toggleCharacter={toggleCharacter}
-          toggleAI={toggleAI}
-          onRightMenuClick={() => setRightMenuOpen(true)} 
+          onMenuClick={() => toggleUIState("showSidebar")}
+          toggleCharacter={() => toggleUIState("showCharacter")}
+          toggleAI={() => toggleUIState("showAICharacter")}
+          onRightMenuClick={() => toggleUIState("rightMenuOpen")} 
         />
 
         {/* RightBar/Menu teus */}
         <RightBar
-          isOpen={rightMenuOpen}
-          onClose={() => setRightMenuOpen(false)}
-          setShowCharacter={setShowCharacter}
-          setShowAICharacter={setShowAICharacter}
-          setShowPetMode={setShowPetMode}
+          isOpen={uiState.rightMenuOpen}
+          onClose={() => toggleUIState("rightMenuOpen")}
+          setShowCharacter={(value) => setUiState((prevState) => ({ ...prevState, showCharacter: value }))}
+          setShowAICharacter={(value) => setUiState((prevState) => ({ ...prevState, showAICharacter: value }))}
+          setShowPetMode={(value) => setUiState((prevState) => ({ ...prevState, showPetMode: value }))}
         />
             
         {location.pathname === "/" && sessionType ==="alumno" && <Hero />}
