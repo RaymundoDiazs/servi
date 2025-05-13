@@ -89,6 +89,20 @@ const FormsAlumno = () => {
         }
     };
 
+    const makeRequest = async (url, options) => {
+        try {
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+            setMensajeError("Ocurrió un error. Por favor, inténtalo de nuevo.");
+            throw error;
+        }
+    };
+
     const handleSubmitAlumno = (e) => {
         e.preventDefault();
         const formInfo = new FormData();
@@ -108,39 +122,32 @@ const FormsAlumno = () => {
             }
         });
         console.log(formInfo);
-        console.log(formData)
-        fetch("http://localhost:8000/users/alumnoNuevo", {
+        console.log(formData);
+        
+        makeRequest("http://localhost:8000/users/alumnoNuevo", {
             method: "POST",
             body: formInfo,
         })
-        .then((res) => {
-            if (res.ok) {
-                setSuccessMessage("Registro exitoso. Redirigiendo...");
-                setTimeout(() => {
-                    
-                    const formInfoSubmit = new FormData();
-                    formInfoSubmit.append("username", formData["matricula"]+"@tec.mx");
-                    formInfoSubmit.append("password", formData["password"]);
+        .then(() => {
+            setSuccessMessage("Registro exitoso. Redirigiendo...");
+            setTimeout(() => {
+                const formInfoSubmit = new FormData();
+                formInfoSubmit.append("username", formData["matricula"]+"@tec.mx");
+                formInfoSubmit.append("password", formData["password"]);
+            
+                makeRequest("http://localhost:8000/login", {
+                    method: "POST",
+                    credentials: "include",
+                    body: formInfoSubmit,
+                })
+                .then((data) => {
+                    console.log(data);
+                    setSessionType(data.tipo);
+                    navigate('/');
+                })
+                .catch((error) => { console.log(error); });
                 
-                
-                    fetch("http://localhost:8000/login", {
-                
-                      method: "POST",
-                      credentials: "include",
-                      body: formInfoSubmit,
-                    })
-                    .then((res) => res.json())
-                    .then((data) => {
-                      console.log(data);
-                      setSessionType(data.tipo);
-                      navigate('/');
-                    })
-                    .catch((error) => { console.log(error); });
-                    
-                }, 3000); // Redirige después de 3 segundos
-            } else {
-                console.log("Error en el registro");
-            }
+            }, 3000); // Redirige después de 3 segundos
         })
         .catch((error) => console.log(error));
     };
