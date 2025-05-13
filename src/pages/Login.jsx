@@ -76,9 +76,8 @@ export default function Login() {
           </div>
 
           {/*Entrar */}
-          <input type="submit" value="Entrar" onClick={handleSubmit} className="submit" />
-
-          <input type="submit" value="Regístrate" onClick={() => navigate("/signin")} className="submit" />
+          <button className="glass-button" onClick={handleSubmit}>Entrar</button>
+<button className="glass-button" onClick={() => navigate("/signup")}>Regístrate</button>
 
         </div>
       </div>
@@ -86,4 +85,3 @@ export default function Login() {
   );
 
 }
-

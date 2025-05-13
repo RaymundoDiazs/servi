@@ -123,6 +123,34 @@ app.post('/users/alumnoNuevo', upload.none(), function(req, res){
   .catch((error) => console.log('ERROR: ', error));
 });
 
+app.post('/users/osfNuevo', upload.array("fotos",3), function(req, res) {
+  console.log(req.body);
+  console.log("DEBERÍA DE HABER COSAS ACÁ")
+  // console.log(req.files); // Aquí estarán los archivos subidos
+
+  // const { nombre, matricula, carrera, password, numero } = req.body;
+
+  // Verificar si los archivos se subieron correctamente
+  // if (!req.files || req.files.length !== 3) {
+  //   return res.status(400).send('Se requieren 3 fotos de las instalaciones.');
+  // }
+
+  // Obtener las rutas de los archivos subidos
+  // const fotos = req.files.map(file => file.path);
+
+  // Aquí puedes guardar las rutas de las fotos en la base de datos junto con los demás datos
+  // db.none(
+  //   "CALL registrar_osf($1, $2, $3, $4, $5, $6, $7, $8);",
+  //   [matricula, carrera, nombre, numero, password, fotos[0], fotos[1], fotos[2]]
+  // )
+  // console.log("acá va algo")
+  //   .then(() => res.status(200).send('Usuario OSF creado'))
+  //   .catch(error => {
+  //     console.log('ERROR: ', error);
+  //     res.status(500).send('Error al registrar el OSF.');
+  //   });
+});
+
 // logout
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
@@ -136,4 +164,27 @@ app.get('/logout', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`servidor escuchando en http://localhost:${PORT}`);
+});
+
+
+//RAY endpoints
+// Actualizar proyecto: modalidad y horas
+
+
+// ✅ ÚNICO endpoint válido
+app.put('/api/proyectos/:id', (req, res) => {
+  const proyectoId = req.params.id;
+  const { modalidad, horas } = req.body;
+
+  const modalidadesValidas = ["presencial", "en linea", "mixto"];
+  if (!modalidadesValidas.includes(modalidad.toLowerCase())) {
+    return res.status(400).json({ error: "Modalidad no válida" });
+  }
+
+  db.none('UPDATE proyecto SET modalidad = $1, horas = $2 WHERE proyecto_id = $3', [modalidad, horas, proyectoId])
+    .then(() => res.status(200).json({ message: "Proyecto actualizado correctamente" }))
+    .catch((err) => {
+      console.error("❌ Error al actualizar el proyecto:", err);
+      res.status(500).json({ error: "Error en la base de datos" });
+    });
 });

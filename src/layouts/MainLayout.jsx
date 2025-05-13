@@ -57,6 +57,16 @@ export default function MainLayout({ children }) {
         {location.pathname === "/" && sessionType ==="alumno" && <Hero />}
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
 
+        {/* Hero solo en "/" 
+        
+                {location.pathname === "/" && <Hero />}
+
+        */}
+
+        {/* Contenido de la página */}
+        <div style={{ position: "relative", zIndex: 1 }}>
+          {children}
+        </div>
       </div>
     </div>
   );
