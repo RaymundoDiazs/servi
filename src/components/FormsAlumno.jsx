@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import { SessionContext } from "../Contexts/SessionContext";
+// test 
 
 const FormsAlumno = () => {
     const [formData, setFormData] = useState({nombre:'', matricula: '', carrera:'', password: '', numero: '', email: '' });
