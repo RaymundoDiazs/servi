@@ -127,7 +127,7 @@
   }
   
   .rightbar-panel {
-    background: rgba(20, 20, 30, 0.5); /* más oscuro que el blanco translúcido */
+    background: rgba(20, 20, 30, 0.5); 
     color: #fff;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   }
@@ -137,7 +137,7 @@
   .rightbar-section label,
   .rightbar-section p {
     color: white;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4); /* mejora el contraste */
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4); 
   }
   
   .rightbar-options li {
@@ -182,7 +182,7 @@
   }
   
   .rightbar-button3 {
-    background: linear-gradient(to right, #8c2183, #993197); /* Amarillo pastel */
+    background: linear-gradient(to right, #8c2183, #993197);
     border: none;
     color: white;
     padding: 0.6rem 1.2rem;
@@ -194,14 +194,14 @@
   }
   
   .rightbar-button3:hover {
-    background: linear-gradient(to right, #3a0535, #2d0522); /* Amarillo más fuerte en hover */
+    background: linear-gradient(to right, #3a0535, #2d0522);
   }
   
   
   .pieza {
     width: 80px; /* Tamaño de las piezas ajustado */
     height: 80px; /* Tamaño de las piezas ajustado */
-    object-fit: cover; /* Asegura que la imagen se ajuste bien dentro del contenedor */
+    object-fit: cover; 
   }
   
   
@@ -221,8 +221,8 @@
     }
     
     .rightbar-button2:hover {
-      background: linear-gradient(to right, #f7c600, #fbbf24); /* Amarillo más fuerte en hover */
-      transform: scale(1.05); /* Agrandar un poco al pasar el mouse */
+      background: linear-gradient(to right, #f7c600, #fbbf24); 
+      transform: scale(1.05); 
       box-shadow: 0 12px 30px rgba(0,0,0,0.15), 0 0 12px rgba(255,255,255,0.7); /* Efecto sombra */
     }
     
@@ -251,7 +251,6 @@
       z-index: 2;
     }
   
-    /* Efecto de salto (bounce) */
   @keyframes bounceUp {
       0% {
         transform: translateY(0);

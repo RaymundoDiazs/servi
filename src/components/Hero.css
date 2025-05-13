@@ -49,4 +49,18 @@
   .hero-filters button:hover {
     background: #ddd;
   }
+
+  .hero-container {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+    overflow: hidden;
+    margin-top: -32px; /* O AJUSTA según la altura del padding/margen del contenedor padre */
+  }
+  
+  .hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   

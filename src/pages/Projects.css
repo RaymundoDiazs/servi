@@ -440,3 +440,30 @@
   padding: 16px 32px;
   transition: all 0.3s ease;
 }
+
+.glass-buttonProjects {
+  background: white;
+  color: #2563eb;
+  padding: 8px 20px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+
+.glass-buttonProjects:hover {
+  background: linear-gradient(to right, #93c5fd, #60a5fa);
+  color: white;
+  transform: scale(1.05);
+}
+
+.glass-buttonProjects.active {
+  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  color: white;
+}
+
+
+
+
