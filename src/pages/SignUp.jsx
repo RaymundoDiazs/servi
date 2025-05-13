@@ -7,6 +7,7 @@ const SignUp = () => {
     const [userType, setUserType] = useState("");
     const navigate = useNavigate(); // Hook para redirigir
 
+    //ayuda
     return (
         <>
         <div className="signup-container">
