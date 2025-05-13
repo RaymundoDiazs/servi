@@ -1,19 +1,10 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from "react";
-
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
-
-const FormsAlumno = () => {
-    const [formData, setFormData] = useState({nombre:'', matricula: '', carrera:'', password: '', numero: '' });
-    const [carrerasArr, setCarrerasArr] = useState([]);
-=======
 import React, { useState, useEffect, useContext } from "react";
 
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import { SessionContext } from "../Contexts/SessionContext";
 
 const FormsAlumno = () => {
-    const [formData, setFormData] = useState({nombre:'', matricula: '', carrera:'', password: '', numero: '', email: '' });
+    const [formData, setFormData] = useState({nombre:'', matricula: '', carrera:'', password: '', numero: '' });
     const [carrerasArr, setCarrerasArr] = useState([]);
     const [nombre, setNombre] = useState('');
     const [matricula, setMatricula] = useState('');
@@ -26,7 +17,6 @@ const FormsAlumno = () => {
     const [mensajeMatricula, setMensajeMatricula] = useState(null); 
     const [mensajeNumero, setMensajeNumero] = useState(null);
     const [mensajeError, setMensajeError] = useState(null); 
->>>>>>> stable
     
     useEffect(() => {
         fetch("http://localhost:8000/carreras")
@@ -37,12 +27,6 @@ const FormsAlumno = () => {
     const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
     const navigate = useNavigate(); // Hook para redirigir
 
-<<<<<<< HEAD
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-=======
     // Validación de longitud mínima y máxima para el nombre
     const handleNombreChange = (e) => {
         const value = e.target.value;
@@ -116,19 +100,7 @@ const FormsAlumno = () => {
         setNumero(value);
     };
 
-    // Validación de correo electrónico
-    const handleEmailChange = (e) => {
-        const value = e.target.value;
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!regex.test(value)) {
-            setMensajeError("Correo electrónico inválido.");
-            setFormData({ ...formData, email: null });
-        } else {
-            setMensajeError(null);
-            setFormData({ ...formData, email: value });
-        }
-        setEmail(value);
-    };
+
 
     // Validación de términos y condiciones
     const handleTermsChange = (e) => {
@@ -138,14 +110,11 @@ const FormsAlumno = () => {
         } else {
             setMensajeError(null);
         }
->>>>>>> stable
     };
 
     const handleSubmitAlumno = (e) => {
         e.preventDefault();
         const formInfo = new FormData();
-<<<<<<< HEAD
-=======
 
         const allNotNull = Object.values(formData).every((value) => value !== null && value !== '');
         
@@ -156,18 +125,13 @@ const FormsAlumno = () => {
             setMensajeError(null);
         }
         
->>>>>>> stable
         Object.entries(formData).forEach(([key, value]) => {
             if (value !== undefined && value !== null) {
                 formInfo.append(key, value);
             }
         });
-<<<<<<< HEAD
-
-=======
         console.log(formInfo);
         console.log(formData)
->>>>>>> stable
         fetch("http://localhost:8000/users/alumnoNuevo", {
             method: "POST",
             body: formInfo,
@@ -176,9 +140,6 @@ const FormsAlumno = () => {
             if (res.ok) {
                 setSuccessMessage("Registro exitoso. Redirigiendo...");
                 setTimeout(() => {
-<<<<<<< HEAD
-                    navigate("/login");
-=======
                     
                     const formInfoSubmit = new FormData();
                     formInfoSubmit.append("username", formData["matricula"]+"@tec.mx");
@@ -199,7 +160,6 @@ const FormsAlumno = () => {
                     })
                     .catch((error) => { console.log(error); });
                     
->>>>>>> stable
                 }, 3000); // Redirige después de 3 segundos
             } else {
                 console.log("Error en el registro");
@@ -219,13 +179,8 @@ const FormsAlumno = () => {
                         type="text"
                         id="nombre"
                         name="nombre"
-<<<<<<< HEAD
-                        value={formData.nombre}
-                        onChange={handleChange}
-=======
                         value={nombre}
                         onChange={handleNombreChange}
->>>>>>> stable
                         required
                     />
                 </div>                
@@ -235,16 +190,6 @@ const FormsAlumno = () => {
                         type="text"
                         id="matricula"
                         name="matricula"
-<<<<<<< HEAD
-                        value={formData.matricula}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Selecciona tu carrera:</label>
-                    <select name="carrera" id="carrera" value={formData.carrera} onChange={handleChange} required>
-=======
                         value={matricula}
                         onChange={handleMatriculaChange}
                         required
@@ -254,7 +199,6 @@ const FormsAlumno = () => {
                 <div>
                     <label>Selecciona tu carrera:</label>
                     <select name="carrera" id="carrera" value={carrera} onChange={handleCarreraChange} required>
->>>>>>> stable
                         <option value="" disabled>-- selecciona --</option>
                         {carrerasArr.map((carrera, index) => (
                             <option key={index} value={carrera.carrera_id}>{carrera.nombre}</option>
@@ -267,49 +211,20 @@ const FormsAlumno = () => {
                         type='text'
                         id='numero'
                         name='numero'
-<<<<<<< HEAD
-                        value={formData.numero}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-=======
                         value={numero}
                         onChange={handleNumeroChange}
                         required
                     />
                 </div>
                 {mensajeNumero && <div className="error-message">{mensajeNumero}</div>} {/* Mensaje de error */}
->>>>>>> stable
                 <div>
                     <label htmlFor="password">Ingresa una contraseña para tu nueva cuenta:</label>
                     <input
                         type="password"
                         id="password"
                         name="password"
-<<<<<<< HEAD
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <button type="submit">Sign Up</button>
-            </form>
-            {successMessage && <div className="success-message">{successMessage}</div>} {/* Mensaje de éxito */}
-=======
                         value={password}
                         onChange={handlePasswordChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="email">Correo electrónico:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={email}
-                        onChange={handleEmailChange}
                         required
                     />
                 </div>
@@ -330,7 +245,6 @@ const FormsAlumno = () => {
             </form>
             {successMessage && <div className="success-message">{successMessage}</div>} {/* Mensaje de éxito */}
             {mensajeError && <div className="error-message">{mensajeError}</div>} {/* Mensaje de error */}
->>>>>>> stable
 
         </div>
     );

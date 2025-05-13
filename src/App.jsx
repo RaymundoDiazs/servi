@@ -17,7 +17,6 @@ import NewProject from "./pages/NewProject.jsx"
 import Login from "./pages/Login";
 import Logout from "./components/Logout";
 import SignUp from "./pages/SignUp";
-import SignUp from "./pages/SignUp";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SessionProvider } from "./Contexts/SessionContext";
 // import Test from "./pages/Test.jsx";
