@@ -1,29 +1,68 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
-import FormsAlumno from '../components/formsAlumno';
+import React, { useState } from 'react';
+import FormsAlumno from '../components/FormsAlumno';
 import FormsOSF from '../components/FormsOsf';
+import './SignUp.css';
+import PixelCharacter from "../components/PixelCharacter";
 
-const SignUp = () => {    
-    const [userType, setUserType] = useState("");
-    const navigate = useNavigate(); // Hook para redirigir
+const SignUp = () => {
+  const [userType, setUserType] = useState("");
+  const [hoveredType, setHoveredType] = useState("");
 
-    return (
-        <>
-        <div className="signup-container">
-            <h2>Sign Up</h2>
-            <p>Regístrate como:</p>
-            <button onClick={() => setUserType("alumno")}>Alumno</button>
-            <button onClick={() => setUserType("osf")}>Organización Socioformadora</button>
-            <button onClick={() => setUserType("")}>Clear</button>
+
+  return (
+    <div className="signup-page-centered">
+      <div className="signup-card-wide">
+        {/* Agente pixelado a la izquierda */}
+        <div className="signup-card-left">
+  <img src="/sslogo_black.png" alt="Logo Servicio Social" className="signup-logo-left" />
+  <PixelCharacter userType={userType} hoveredType={hoveredType} />
+</div>
+
+
+        {/* Formulario a la derecha */}
+        <div className="signup-card-right">
+        {!userType && (
+  <>
+    <h2>Registro</h2>
+    <p>¿Quién eres?</p>
+    <div className="signup-toggle-buttons">
+      <button
+        className="glass-button"
+        onMouseEnter={() => setHoveredType("alumno")}
+        onMouseLeave={() => setHoveredType("")}
+        onClick={() => setUserType("alumno")}
+      >
+        Alumno
+      </button>
+
+      <button
+        className="glass-button"
+        onMouseEnter={() => setHoveredType("osf")}
+        onMouseLeave={() => setHoveredType("")}
+        onClick={() => setUserType("osf")}
+      >
+        Organización
+      </button>
+
+      <button
+        className="glass-button"
+        onMouseEnter={() => setHoveredType("limpiar")}
+        onMouseLeave={() => setHoveredType("")}
+        onClick={() => setUserType("")}
+      >
+        Limpiar
+      </button>
+    </div>
+  </>
+)}
+
+{userType === "alumno" && <FormsAlumno />}
+{userType === "osf" && <FormsOSF />}
+
         </div>
-        {userType === "alumno" && (
-            <FormsAlumno/>
-        )}
-        {userType === "osf" && (
-            <FormsOSF/>
-        )}
-        </>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default SignUp;

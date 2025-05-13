@@ -51,4 +51,3 @@ export function ProjectCard({ project }) {
     </div>
   );
 }
-

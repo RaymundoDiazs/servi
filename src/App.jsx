@@ -13,82 +13,76 @@ import RespuestasAlumnos from "./tools/RespuestasAlumnos";
 import { BallProvider } from "./Contexts/BallContext";
 import ProjectDetail from "./pages/ProjectDetail";
 //import RightBar from "./components/RightBar";
-import NewProject from "./pages/NewProject.jsx"
 import Login from "./pages/Login";
 import Logout from "./components/Logout";
 import SignUp from "./pages/SignUp";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SessionProvider } from "./Contexts/SessionContext";
-// import Test from "./pages/Test.jsx";
 import "./App.css";
 
+function AppWrapper({ sessionType }) {
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [showCharacter, setShowCharacter] = useState(false);
+  const [showAICharacter, setShowAICharacter] = useState(false);
+  const [showPetMode, setShowPetMode] = useState(false);
+  const [rightMenuOpen, setRightMenuOpen] = useState(false);
 
-// CREO QUE TODO LO QUE ESTÁ ABAJO SE ORIGINÓ DE ALGÚN MERGE RARO, NO SE USA
-//  -Alonso
+  const toggleSidebar = () => setShowSidebar(!showSidebar);
+  const toggleCharacter = () => setShowCharacter((prev) => !prev);
+  const toggleAI = () => setShowAICharacter((prev) => !prev);
 
-// function AppWrapper({ sessionType }) {
-//   const [showSidebar, setShowSidebar] = useState(true);
-//   const [showCharacter, setShowCharacter] = useState(false);
-//   const [showAICharacter, setShowAICharacter] = useState(false);
-//   const [showPetMode, setShowPetMode] = useState(false);
-//   const [rightMenuOpen, setRightMenuOpen] = useState(false);
+  const location = useLocation();
 
-//   const toggleSidebar = () => setShowSidebar(!showSidebar);
-//   const toggleCharacter = () => setShowCharacter((prev) => !prev);
-//   const toggleAI = () => setShowAICharacter((prev) => !prev);
-
-//   const location = useLocation();
-
-//   return (
-//     <div style={{ display: "flex" }}>
-//       {showSidebar && <Sidebar />}
-//       <div style={{ flex: 1, position: "relative" }}>
+  return (
+    <div style={{ display: "flex" }}>
+      {showSidebar && <Sidebar />}
+      <div style={{ flex: 1, position: "relative" }}>
         
-//         {/* Personaje activo */}
-//         {showCharacter && <PixelCharacter />}
-//         {showAICharacter && <PixelCharacterAI />}
-//         {showPetMode && <PetMode />}
+        {/* Personaje activo */}
+        {showCharacter && <PixelCharacter />}
+        {showAICharacter && <PixelCharacterAI />}
+        {showPetMode && <PetMode />}
 
-//         {/* Header */}
-//         <Header
-//           onMenuClick={toggleSidebar}
-//           toggleCharacter={toggleCharacter}
-//           toggleAI={toggleAI}
-//           onRightMenuClick={() => setRightMenuOpen(true)}
-//         />
+        {/* Header */}
+        <Header
+          onMenuClick={toggleSidebar}
+          toggleCharacter={toggleCharacter}
+          toggleAI={toggleAI}
+          onRightMenuClick={() => setRightMenuOpen(true)}
+        />
 
-//         {/* RightBar */}
-//         <RightBar
-//           isOpen={rightMenuOpen}
-//           onClose={() => setRightMenuOpen(false)}
-//           setShowCharacter={setShowCharacter}
-//           setShowAICharacter={setShowAICharacter}
-//           setShowPetMode={setShowPetMode}
-//         />
+        {/* RightBar */}
+        <RightBar
+          isOpen={rightMenuOpen}
+          onClose={() => setRightMenuOpen(false)}
+          setShowCharacter={setShowCharacter}
+          setShowAICharacter={setShowAICharacter}
+          setShowPetMode={setShowPetMode}
+        />
 
-//         {/* Mostrar Hero solo en la principal */}
-//         {location.pathname === "/" && <Hero />}
+        {/* Mostrar Hero solo en la principal */}
+        {location.pathname === "/" && <Hero />}
 
-//         {/* Páginas */}
-//         <div style={{ position: "relative", height: "100px", zIndex: -1 }} />
-//         <div style={{ position: "relative", zIndex: 1 }}>
-//           <Routes>
-//             {/* Protegidas */}
-//             <Route path="/" element={<ProtectedRoute><Projects sessionType={sessionType} /></ProtectedRoute>} />
-//             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-//             <Route path="/respuesta_alumnos" element={<ProtectedRoute><RespuestasAlumnos /></ProtectedRoute>} />
-//             <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
-//             {/* <Route path="/formosf" element={<ProtectedRoute><FormOSF /></ProtectedRoute>} /> */} {/* esto ya no se usa*/}
+        {/* Páginas */}
+        <div style={{ position: "relative", height: "100px", zIndex: -1 }} />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <Routes>
+            {/* Protegidas */}
+            <Route path="/" element={<ProtectedRoute><Projects sessionType={sessionType} /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/respuesta_alumnos" element={<ProtectedRoute><RespuestasAlumnos /></ProtectedRoute>} />
+            <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
+            <Route path="/formosf" element={<ProtectedRoute><FormOSF /></ProtectedRoute>} />
 
-//             {/* Públicas */}
-//             <Route path="/login" element={<Login />} />
-//             <Route path="/logout" element={<Logout />} />
-//           </Routes>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+            {/* Públicas */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
+          </Routes>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [sessionType, setSessionType] = useState('');
@@ -122,16 +116,14 @@ export default function App() {
                 <MainLayout> <Projects sessionType={sessionType} /> </MainLayout> 
               </ProtectedRoute>
             } />
-            <Route path="/dashboard" element={  <MainLayout> <Dashboard /> </MainLayout> } />
+            <Route path="/dashboard" element={ <MainLayout> <Dashboard /> </MainLayout> } />
             <Route path="/respuesta_alumnos" element={ <MainLayout> <RespuestasAlumnos /> </MainLayout> } />
             <Route path="/projects/:id" element={ <MainLayout> <ProjectDetail /> </MainLayout> } />
-            <Route path="/projects/new" element={ <MainLayout> <NewProject /> </MainLayout> } />
             
             {/* Rutas públicas sin layout */}
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/signup" element={<SignUp></SignUp>}></Route>
-            {/* <Route path="/test" element={<Test></Test>}></Route> */}
           </Routes>
         </Router>
       </BallProvider>

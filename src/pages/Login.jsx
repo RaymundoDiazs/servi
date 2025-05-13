@@ -9,23 +9,12 @@ export default function Login() {
   const { setSessionType } = useContext(SessionContext);
   const navigate = useNavigate();
 
-  const [mensaje, setMensaje] = useState(null)
-
   function handleUsernameChange(e) { setUsername(e.target.value); }
   function handlePasswordChange(e) { setPassword(e.target.value); }
 
   function handleSubmit() {
     const formInfo = new FormData();
-
-    const regex = /^[Aa]01\d{6}$/ // Expresión regular para validar si el username es un número de matrícula
-    console.log(regex.test(username))
-    if (regex.test(username)) {
-      formInfo.append("username", username+"@tec.mx");
-    }
-    else{
-      formInfo.append("username", username);
-    }
-    
+    formInfo.append("username", username);
     formInfo.append("password", password);
 
 
@@ -35,47 +24,12 @@ export default function Login() {
       credentials: "include",
       body: formInfo,
     })
-    .then((res) =>{
-      console.log(res)
-
-      if (res.status == 200) {
-        console.log("bien")
-        setMensaje(null)
-        // console.log(res.json())
-      }
-      else {
-        console.log("mal")
-      }
-      
-      return res.json()
-    }
-    )
+    .then((res) => res.json())
     .then((data) => {
       console.log(data);
-      setMensaje(data.message)
-      if (data.tipo) {
-        console.log(data.tipo)
-        setSessionType(data.tipo);
-        navigate('/');
-
-      }
+      setSessionType(data.tipo);
+      navigate('/');
     })
-  //   .then((res) => {
-  //     console.log(res)
-  //     if (res.status == 200) {
-  //       console.log("bien")
-  //       setMensaje(null)
-  //       setSessionType(res.tipo);
-  //       // navigate('/');
-  //       // console.log(res.json())
-  //     }
-  //     else {
-  //       console.log("mal")
-  //       setMensaje("Credenciales incorrectas")
-  //     }
-  //   }
-    
-  // )
     .catch((error) => { console.log(error); });
   }
 
@@ -120,15 +74,10 @@ export default function Login() {
               className="input-text"
             />
           </div>
-          { mensaje && (
-            <div>
-              {mensaje}
-            </div>
-          ) }
-          {/*Entrar */}
-          <input type="submit" value="Entrar" onClick={handleSubmit} className="submit" />
 
-          <input type="submit" value="Regístrate" onClick={() => navigate("/signup")} className="submit" />
+          {/*Entrar */}
+          <button className="glass-button" onClick={handleSubmit}>Entrar</button>
+<button className="glass-button" onClick={() => navigate("/signup")}>Regístrate</button>
 
         </div>
       </div>
@@ -136,4 +85,3 @@ export default function Login() {
   );
 
 }
-

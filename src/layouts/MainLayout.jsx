@@ -26,7 +26,7 @@ export default function MainLayout({ children }) {
 
   return (
     <div className="app" style={{ display: "flex" }}>
-      {showSidebar && sessionType !== "alumno" && <Sidebar />}
+      {showSidebar && <Sidebar />}
       <div className="content" style={{ flex: 1, position: "relative" }}>
         
         {/* teus modos */}
@@ -57,6 +57,16 @@ export default function MainLayout({ children }) {
         {location.pathname === "/" && sessionType ==="alumno" && <Hero />}
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
 
+        {/* Hero solo en "/" 
+        
+                {location.pathname === "/" && <Hero />}
+
+        */}
+
+        {/* Contenido de la página */}
+        <div style={{ position: "relative", zIndex: 1 }}>
+          {children}
+        </div>
       </div>
     </div>
   );

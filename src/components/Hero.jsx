@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import "./Hero.css";
 
-const Hero = () => {
+const Hero = ({ searchText, setSearchText }) => {
   return (
     <div className="hero-container">
       <video autoPlay muted loop className="hero-video">
@@ -15,6 +15,8 @@ const Hero = () => {
           className="hero-search"
           type="text"
           placeholder="¿A dónde quieres postularte?"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
         />
         <div className="hero-filters">
           {[
