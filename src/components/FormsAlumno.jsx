@@ -27,21 +27,28 @@ const FormsAlumno = () => {
     const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
     const navigate = useNavigate(); // Hook para redirigir
 
-    // Validación de longitud mínima y máxima para el nombre
-    const handleNombreChange = (e) => {
-        const value = e.target.value;
-        const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/;
-        if (value.length < 3 || value.length > 50) {
-            setMensajeError("El nombre debe tener entre 3 y 50 caracteres.");
-            setFormData({ ...formData, nombre: null });
-        } else if (!regex.test(value)) {
-            setMensajeError("El nombre solo puede contener letras y espacios.");
-            setFormData({ ...formData, nombre: null });
+    const validations = {
+        nombre: {
+            regex: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,50}$/,
+            error: "El nombre debe tener entre 3 y 50 caracteres y solo puede contener letras y espacios.",
+        },
+        matricula: {
+            regex: /^[Aa]01\d{6}$/,
+            error: "Matrícula inválida. Debe seguir el formato A01XXXXXX.",
+        },
+        // Agregar más validaciones aquí...
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        const validation = validations[name];
+        if (validation && !validation.regex.test(value)) {
+            setMensajeError(validation.error);
+            setFormData({ ...formData, [name]: null });
         } else {
             setMensajeError(null);
-            setFormData({ ...formData, nombre: value });
+            setFormData({ ...formData, [name]: value });
         }
-        setNombre(value);
     };
 
     // Validación de duplicados en matrícula
@@ -70,48 +77,6 @@ const FormsAlumno = () => {
     const handleCarreraChange = (e) => {
         setCarrera(e.target.value);
         setFormData({ ...formData, carrera: e.target.value });
-    };
-
-    // Validación de contraseña segura
-    const handlePasswordChange = (e) => {
-        const value = e.target.value;
-        const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!regex.test(value)) {
-            setMensajeError("La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.");
-            setFormData({ ...formData, password: null });
-        } else {
-            setMensajeError(null);
-            setFormData({ ...formData, password: value });
-        }
-        setPassword(value);
-    };
-
-    // Validación de número de teléfono internacional
-    const handleNumeroChange = (e) => {
-        const value = e.target.value;
-        const regex = /^\+?\d{10,15}$/;
-        if (!regex.test(value)) {
-            setMensajeNumero("Número de teléfono inválido. Debe tener entre 10 y 15 dígitos y puede incluir un prefijo internacional.");
-            setFormData({ ...formData, numero: null });
-        } else {
-            setMensajeNumero(null);
-            setFormData({ ...formData, numero: value });
-        }
-        setNumero(value);
-    };
-
-    // Validación de correo electrónico
-    const handleEmailChange = (e) => {
-        const value = e.target.value;
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!regex.test(value)) {
-            setMensajeError("Correo electrónico inválido.");
-            setFormData({ ...formData, email: null });
-        } else {
-            setMensajeError(null);
-            setFormData({ ...formData, email: value });
-        }
-        setEmail(value);
     };
 
     // Validación de términos y condiciones
@@ -192,7 +157,7 @@ const FormsAlumno = () => {
                         id="nombre"
                         name="nombre"
                         value={nombre}
-                        onChange={handleNombreChange}
+                        onChange={handleInputChange}
                         required
                     />
                 </div>                
@@ -224,7 +189,7 @@ const FormsAlumno = () => {
                         id='numero'
                         name='numero'
                         value={numero}
-                        onChange={handleNumeroChange}
+                        onChange={handleInputChange}
                         required
                     />
                 </div>
@@ -236,7 +201,7 @@ const FormsAlumno = () => {
                         id="password"
                         name="password"
                         value={password}
-                        onChange={handlePasswordChange}
+                        onChange={handleInputChange}
                         required
                     />
                 </div>
@@ -247,7 +212,7 @@ const FormsAlumno = () => {
                         id="email"
                         name="email"
                         value={email}
-                        onChange={handleEmailChange}
+                        onChange={handleInputChange}
                         required
                     />
                 </div>
