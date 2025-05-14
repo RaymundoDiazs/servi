@@ -63,10 +63,6 @@ export default function MainLayout({ children }) {
 
         */}
 
-        {/* Contenido de la página */}
-        <div style={{ position: "relative", zIndex: 1 }}>
-          {children}
-        </div>
       </div>
     </div>
   );
