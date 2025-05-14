@@ -54,7 +54,7 @@ export default function MainLayout({ children }) {
           setShowPetMode={setShowPetMode}
         />
             
-        {location.pathname === "/" && sessionType ==="alumno" && <Hero />}
+        {/* {location.pathname === "/" && sessionType ==="alumno" && <Hero />} */}
         <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
 
         {/* Hero solo en "/" 
