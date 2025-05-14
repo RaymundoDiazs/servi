@@ -102,7 +102,7 @@ const Projects = () => {
   return (
     <Box className="projects-page">
 
-<Hero searchText={searchText} setSearchText={setSearchText} /> 
+{ sessionType === "alumno" && <Hero searchText={searchText} setSearchText={setSearchText} /> }
 
 
       
