@@ -1,0 +1,101 @@
+.dashboard-container {
+    padding: 3rem;
+    font-family: 'Inter', sans-serif;
+    min-height: 120vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e0e7ff 100%);
+  }
+  
+  .dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 0.25rem;
+  }
+  
+  .dashboard-subtitle {
+    font-size: 1.05rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 2rem;
+    row-gap: 6rem;
+    justify-items: center;
+    align-items: stretch;
+  }
+  
+  /* 🎯 Tarjeta con estilo Glassmorphism */
+  .dashboard-card {
+    background-color: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 1rem;
+    padding: 2.2rem 1.4rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 260px;
+    outline: none;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .dashboard-card:hover,
+  .dashboard-card:focus {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+  
+  .dashboard-card:focus {
+    border: 2px solid #7e6bf5;
+  }
+  
+  /* Ícono */
+  .dashboard-icon-wrapper {
+    font-size: 2.2rem;
+    margin-bottom: 0.8rem;
+    color: #3c3558;
+    transition: transform 0.2s ease;
+  }
+  
+  .dashboard-card:hover .dashboard-icon-wrapper {
+    transform: scale(1.15);
+  }
+  
+  /* Etiqueta */
+  .dashboard-label {
+    display: block;
+    font-size: 1.02rem;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  /* Badge "Nuevo" */
+  .dashboard-badge {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background-color: #ff3b83;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
+
+.dashboard-subtext {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 6px;
+    font-weight: 400;
+  }
+  
+  

@@ -1,0 +1,47 @@
+.pixel-character {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  background-image: url("/spritesheet.png");
+  background-size: 384px auto;
+  animation: walk 0.6s steps(6) infinite;
+  z-index: 10;
+}
+
+
+
+@keyframes walk {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -384px 0;
+  }
+}
+.lupi-speech {
+  opacity: 0;
+  transform: scale(0.8);
+  animation: fadeInPop 0.3s forwards;
+  background: white;
+  color: #1e293b;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  white-space: nowrap;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1000;
+}
+
+@keyframes fadeInPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
