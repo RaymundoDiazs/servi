@@ -10,6 +10,16 @@ app.use(express.json());
 const multer = require('multer');
 const { data } = require('react-router');
 
+// Needed for the endpoints to work with Google API
+const { google } = require('googleapis');
+const fs = require('fs');
+
+// Needed for the endpoints to work with SendGrid API
+// const { sendWelcomeEmail } = require('./emailService');
+
+// Needed for the endpoints to work with Gmail API
+const { sendWelcomeEmail } = require('./gmailService');
+
 const storage = multer.diskStorage({
   destination: '../src/assets',
   filename: (req, file, cb) => {
@@ -27,7 +37,7 @@ const cn = {
     port: 5432,
     database: 'servi',
     user: 'postgres',
-    password: 'postgres',
+    password: 'yahelito346',
     allowExitOnIdle: true
 }
 const db = pgp(cn);
@@ -126,13 +136,13 @@ app.post('/login', upload.none(), (req, res) => {
   .catch((error) => console.log('ERROR: ', error));
 });
 
-app.post('/users/alumnoNuevo', upload.none(), function(req, res){
-  console.log(req.body)
-  const {nombre, matricula, carrera, password, numero} = req.body;
-  db.none("CALL registrar_alumno($1, $2, $3, $4, $5);", [matricula, carrera, nombre, numero, password])
-  .then(() => res.status(200).send('Usuario creado'))
-  .catch((error) => console.log('ERROR: ', error));
-});
+// app.post('/users/alumnoNuevo', upload.none(), function(req, res){
+//   console.log(req.body)
+//   const {nombre, matricula, carrera, password, numero} = req.body;
+//   db.none("CALL registrar_alumno($1, $2, $3, $4, $5);", [matricula, carrera, nombre, numero, password])
+//   .then(() => res.status(200).send('Usuario creado'))
+//   .catch((error) => console.log('ERROR: ', error));
+// });
 
 app.get('/users/checkMatricula/:matricula', (req, res) => {
   const {matricula} = req.params;
@@ -230,4 +240,196 @@ app.put('/api/proyectos/:id', (req, res) => {
       console.error("❌ Error al actualizar el proyecto:", err);
       res.status(500).json({ error: "Error en la base de datos" });
     });
+});
+
+// Endpoint to send data to Google Sheets
+app.post('/sheets/export', async (req, res) => {
+  try {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: '../env/ss-dashboard-461116-680a882160af.json',
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+
+    const client = await auth.getClient();
+    const sheets = google.sheets({ version: 'v4', auth: client });
+
+    const spreadsheetId = '1lMG8Gk2_RUWxE94hqO-d57jLc6iLqf7tWgJ5YrqhhMQ';
+    const sheetName = 'Archivo Nacional'; // Make sure this matches the tab name exactly
+
+    const exportData = await db.any(`SELECT 
+      p.proyecto_id,
+      p.nombre_proyecto,
+      p.problema_social,
+      p.tipo_vulnerabilidad,
+      p.rango_edad,
+      p.zona,
+      p.numero_beneficiarios,
+      p.objetivo_general,
+      p.lista_actividades_alumno,
+      p.producto_a_entregar,
+      p.entregable_desc,
+      p.medida_impacto_social,
+      p.modalidad,
+      p.modalidad_desc,
+      p.competencias,
+      p.cantidad,
+      p.direccion,
+      p.enlace_maps,
+      p.valor_promueve,
+      p.surgio_unidad_formacion,
+      osf.nombre AS osf_nombre,
+      oi.mision,
+      oi.vision,
+      oi.objetivos,
+      oi.poblacion,
+      oi.num_beneficiarios,
+      oi.nombre_responsable,
+      oi.correo_responsable,
+      array_agg(DISTINCT ods.nombre) AS ods,
+      array_agg(DISTINCT c.nombre_completo) AS carreras,
+      mp.horas,
+      pa.nombre AS periodo_nombre
+    FROM proyecto p
+    JOIN osf ON p.osf_id = osf.osf_id
+    JOIN osf_institucional oi ON osf.osf_id = oi.osf_id
+    LEFT JOIN proyecto_ods pod ON p.proyecto_id = pod.proyecto_id
+    LEFT JOIN objetivos_desarrollo_sostenible ods ON pod.ods_id = ods.ods_id
+    LEFT JOIN proyecto_carrera pc ON p.proyecto_id = pc.proyecto_id
+    LEFT JOIN carrera c ON pc.carrera_id = c.carrera_id
+    LEFT JOIN momentos_periodo mp ON p.momento_id = mp.momento_id
+    LEFT JOIN periodo_academico pa ON mp.periodo_id = pa.periodo_id
+    GROUP BY 
+      p.proyecto_id, osf.nombre, oi.mision, oi.vision, oi.objetivos, oi.poblacion, 
+      oi.num_beneficiarios, oi.nombre_responsable, oi.correo_responsable, mp.horas, pa.nombre;`);
+
+    const headers = [
+      "Dirección de correo electrónico de quien registra la información",
+      "Región",
+      "Campus",
+      "CRN",
+      "Grupo",
+      "Clave de la materia",
+      "Periodo académico en el que se ofertará (regular o intensivo - combo):",
+      "Periodo",
+      "FECHA",
+      "OSF",
+      "¿Cuál es la razón de ser, visión y objetivos de la OSF?",
+      "Población que atiende la OSF",
+      "Número de beneficiarios que atiende la OSF anualmente:",
+      "ODS en el que se enfoca la OSF",
+      "Contacto General",
+      "CORREO",
+      "PROYECTO",
+      "Descripción del problema social",
+      "Tipo de vulnerabilidad",
+      "Rango de edad",
+      "Zona",
+      "Número de beneficiarios del proyecto",
+      "Objetivo del Proyecto Solidario",
+      "ODS del proyecto",
+      "Actividades del estudiantado",
+      "Producto o Servicio a entregar",
+      "Descripción del entregable",
+      "Cómo medirán el impacto social",
+      "Días de la semana para actividades",
+      "Horario",
+      "Carreras requeridas",
+      "Habilidades o competencias",
+      "Cupo de estudiantes",
+      "MODALIDAD",
+      "Dirección",
+      "Lugar de trabajo (enlace maps)",
+      "Duración de la experiencia",
+      "Valor o actitud que promueve",
+      "¿Surgió de propuesta de Inducción/Semana Tec/etc.?",
+      "Periodo académico"
+    ];
+
+    const rows = exportData.map(project => [
+      "", // email
+      "Centro-Occidente",
+      "PUE",
+      "", // CRN
+      "", // Grupo
+      "WA1065",
+      project.periodo_nombre.includes("Invierno") ? "Intensivo" : "Regular",
+      project.periodo_nombre,
+      "", // FECHA
+      project.osf_nombre,
+      `${project.mision || ""} ${project.vision || ""} ${project.objetivos || ""}`,
+      project.poblacion || "",
+      project.num_beneficiarios || "",
+      Array.isArray(project.ods) ? project.ods.filter(Boolean).join(", ") : "",
+      project.nombre_responsable || "",
+      project.correo_responsable || "",
+      project.nombre_proyecto || "",
+      project.problema_social || "",
+      project.tipo_vulnerabilidad || "",
+      project.rango_edad || "",
+      project.zona || "",
+      project.numero_beneficiarios || "",
+      project.objetivo_general || "",
+      Array.isArray(project.ods) ? project.ods.filter(Boolean).join(", ") : "",
+      project.lista_actividades_alumno || "",
+      project.producto_a_entregar || "",
+      project.entregable_desc || "",
+      project.medida_impacto_social || "",
+      project.modalidad_desc || "",
+      "", // horario
+      Array.isArray(project.carreras) ? project.carreras.filter(Boolean).join(", ") : "",
+      project.competencias || "",
+      project.cantidad || "",
+      project.modalidad || "",
+      project.direccion || "",
+      project.enlace_maps || "",
+      `${project.horas || ""} horas`,
+      project.valor_promueve || "",
+      project.surgio_unidad_formacion || "",
+      project.periodo_nombre || ""
+    ]);
+
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `${sheetName}!A3`,
+      valueInputOption: 'RAW',
+      requestBody: {
+        values: rows,
+      },
+    });
+
+    res.status(200).json({
+      message: '✅ Exported to Google Sheets successfully!',
+      totalProjects: exportData.length,
+      periods: [...new Set(exportData.map(p => p.periodo_nombre))],
+      preview: exportData.slice(0, 2).map(project => ({
+        nombre_proyecto: project.nombre_proyecto,
+        osf_nombre: project.osf_nombre,
+        modalidad: project.modalidad,
+        cantidad: project.cantidad,
+        periodo: project.periodo_nombre,
+        zona: project.zona
+      }))
+    });
+
+  } catch (error) {
+    console.error('❌ Error exporting to Google Sheets:', error);
+    res.status(500).json({ error: 'Failed to export to Google Sheets' });
+  }
+});
+
+// Endpoint to register a new student and send a welcome email
+app.post('/users/alumnoNuevo', upload.none(), async function(req, res){
+  const { nombre, matricula, carrera, password, numero } = req.body;
+  try {
+    await db.none("CALL registrar_alumno($1, $2, $3, $4, $5);", [matricula, carrera, nombre, numero, password]);
+
+    const email = `${matricula}@tec.mx`;
+    await sendWelcomeEmail(email, nombre);
+    // await sendWelcomeEmail('dextroc346.d3@gmail.com', nombre);
+
+    res.status(200).send('Usuario creado y correo enviado');
+  } catch (error) {
+    console.log('ERROR: ', error);
+    res.status(500).send('Error al registrar al alumno');
+  }
 });

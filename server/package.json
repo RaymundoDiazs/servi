@@ -11,14 +11,21 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@azure/identity": "^4.10.0",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "@sendgrid/mail": "^8.1.5",
     "connect": "^3.7.0",
     "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "multer": "^1.4.5-lts.2",
+    "nodemailer": "^7.0.3",
     "pg": "^8.15.6",
-    "pg-promise": "^11.13.0"
+    "pg-promise": "^11.13.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.6.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

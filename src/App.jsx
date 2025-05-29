@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import MainLayout from "./layouts/MainLayout";
 import Projects from "./pages/Projects";
 import Dashboard from "./pages/Dashboard";
+import Export from "./pages/Export";
 import Hero from "./components/Hero";
 import Header from "./components/Header";
 import PixelCharacter from "./components/PixelCharacter";
@@ -126,6 +127,7 @@ export default function App() {
             <Route path="/respuesta_alumnos" element={ <MainLayout> <RespuestasAlumnos /> </MainLayout> } />
             <Route path="/projects/:id" element={ <MainLayout> <ProjectDetail /> </MainLayout> } />
             <Route path="/projects/new" element={ <MainLayout> <NewProject /> </MainLayout> } />
+            <Route path="/export" element={ <MainLayout> <Export /> </MainLayout> } />
             
             {/* Rutas públicas sin layout */}
             <Route path="/login" element={<Login />} />

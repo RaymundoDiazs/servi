@@ -19,7 +19,7 @@ const Sidebar = () => {
         navigate("/proyectos_revisar");
         break;
       case "Exportar":
-        navigate("/exportar");
+        navigate("/export");
         break;
       case "Crear Proyecto":
         navigate("/projects/new")
