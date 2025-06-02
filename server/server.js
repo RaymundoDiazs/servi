@@ -242,7 +242,7 @@ app.put('/api/proyectos/:id', (req, res) => {
     });
 });
 
-// Endpoint to send data to Google Sheets
+// Endpoint to export projects to Google Sheets in Nacional Sheet format
 app.post('/sheets/export', async (req, res) => {
   try {
     const auth = new google.auth.GoogleAuth({
@@ -254,143 +254,132 @@ app.post('/sheets/export', async (req, res) => {
     const sheets = google.sheets({ version: 'v4', auth: client });
 
     const spreadsheetId = '1lMG8Gk2_RUWxE94hqO-d57jLc6iLqf7tWgJ5YrqhhMQ';
-    const sheetName = 'Archivo Nacional'; // Make sure this matches the tab name exactly
+    const sheetName = 'Archivo Nacional';
 
-    const exportData = await db.any(`SELECT 
-      p.proyecto_id,
-      p.nombre_proyecto,
-      p.problema_social,
-      p.tipo_vulnerabilidad,
-      p.rango_edad,
-      p.zona,
-      p.numero_beneficiarios,
-      p.objetivo_general,
-      p.lista_actividades_alumno,
-      p.producto_a_entregar,
-      p.entregable_desc,
-      p.medida_impacto_social,
-      p.modalidad,
-      p.modalidad_desc,
-      p.competencias,
-      p.cantidad,
-      p.direccion,
-      p.enlace_maps,
-      p.valor_promueve,
-      p.surgio_unidad_formacion,
-      osf.nombre AS osf_nombre,
-      oi.mision,
-      oi.vision,
-      oi.objetivos,
-      oi.poblacion,
-      oi.num_beneficiarios,
-      oi.nombre_responsable,
-      oi.correo_responsable,
-      array_agg(DISTINCT ods.nombre) AS ods,
-      array_agg(DISTINCT c.nombre_completo) AS carreras,
-      mp.horas,
-      pa.nombre AS periodo_nombre
-    FROM proyecto p
-    JOIN osf ON p.osf_id = osf.osf_id
-    JOIN osf_institucional oi ON osf.osf_id = oi.osf_id
-    LEFT JOIN proyecto_ods pod ON p.proyecto_id = pod.proyecto_id
-    LEFT JOIN objetivos_desarrollo_sostenible ods ON pod.ods_id = ods.ods_id
-    LEFT JOIN proyecto_carrera pc ON p.proyecto_id = pc.proyecto_id
-    LEFT JOIN carrera c ON pc.carrera_id = c.carrera_id
-    LEFT JOIN momentos_periodo mp ON p.momento_id = mp.momento_id
-    LEFT JOIN periodo_academico pa ON mp.periodo_id = pa.periodo_id
-    GROUP BY 
-      p.proyecto_id, osf.nombre, oi.mision, oi.vision, oi.objetivos, oi.poblacion, 
-      oi.num_beneficiarios, oi.nombre_responsable, oi.correo_responsable, mp.horas, pa.nombre;`);
+    const exportData = await db.any(`
+      SELECT 
+        p.proyecto_id,
+        p.nombre_proyecto,
+        p.problema_social,
+        p.tipo_vulnerabilidad,
+        p.rango_edad,
+        p.zona,
+        p.numero_beneficiarios,
+        p.objetivo_general,
+        p.lista_actividades_alumno,
+        p.producto_a_entregar,
+        p.entregable_desc,
+        p.medida_impacto_social,
+        p.modalidad,
+        p.modalidad_desc,
+        p.competencias,
+        p.cantidad,
+        p.direccion,
+        p.enlace_maps,
+        p.valor_promueve,
+        p.surgio_unidad_formacion,
+        osf.nombre AS osf_nombre,
+        oi.mision,
+        oi.vision,
+        oi.objetivos,
+        oi.poblacion,
+        oi.num_beneficiarios,
+        oi.nombre_responsable,
+        oi.puesto_responsable,
+        oi.correo_responsable,
+        oi.telefono,
+        oi.pagina_web_redes,
+        array_agg(DISTINCT ods.nombre) AS ods,
+        array_agg(DISTINCT c.nombre_completo) AS carreras,
+        mp.horas,
+        mp.fecha_inicio,
+        mp.fecha_final,
+        pa.nombre AS periodo_nombre,
+        mp.momento
+      FROM proyecto p
+      JOIN osf ON p.osf_id = osf.osf_id
+      JOIN osf_institucional oi ON osf.osf_id = oi.osf_id
+      LEFT JOIN proyecto_ods pod ON p.proyecto_id = pod.proyecto_id
+      LEFT JOIN objetivos_desarrollo_sostenible ods ON pod.ods_id = ods.ods_id
+      LEFT JOIN proyecto_carrera pc ON p.proyecto_id = pc.proyecto_id
+      LEFT JOIN carrera c ON pc.carrera_id = c.carrera_id
+      LEFT JOIN momentos_periodo mp ON p.momento_id = mp.momento_id
+      LEFT JOIN periodo_academico pa ON mp.periodo_id = pa.periodo_id
+      GROUP BY 
+        p.proyecto_id, osf.nombre, oi.mision, oi.vision, oi.objetivos, oi.poblacion, 
+        oi.num_beneficiarios, oi.nombre_responsable, oi.puesto_responsable, oi.correo_responsable, 
+        oi.telefono, oi.pagina_web_redes, mp.horas, mp.fecha_inicio, mp.fecha_final, pa.nombre, mp.momento;
+    `);
 
-    const headers = [
-      "Dirección de correo electrónico de quien registra la información",
-      "Región",
-      "Campus",
-      "CRN",
-      "Grupo",
-      "Clave de la materia",
-      "Periodo académico en el que se ofertará (regular o intensivo - combo):",
-      "Periodo",
-      "FECHA",
-      "OSF",
-      "¿Cuál es la razón de ser, visión y objetivos de la OSF?",
-      "Población que atiende la OSF",
-      "Número de beneficiarios que atiende la OSF anualmente:",
-      "ODS en el que se enfoca la OSF",
-      "Contacto General",
-      "CORREO",
-      "PROYECTO",
-      "Descripción del problema social",
-      "Tipo de vulnerabilidad",
-      "Rango de edad",
-      "Zona",
-      "Número de beneficiarios del proyecto",
-      "Objetivo del Proyecto Solidario",
-      "ODS del proyecto",
-      "Actividades del estudiantado",
-      "Producto o Servicio a entregar",
-      "Descripción del entregable",
-      "Cómo medirán el impacto social",
-      "Días de la semana para actividades",
-      "Horario",
-      "Carreras requeridas",
-      "Habilidades o competencias",
-      "Cupo de estudiantes",
-      "MODALIDAD",
-      "Dirección",
-      "Lugar de trabajo (enlace maps)",
-      "Duración de la experiencia",
-      "Valor o actitud que promueve",
-      "¿Surgió de propuesta de Inducción/Semana Tec/etc.?",
-      "Periodo académico"
-    ];
+    const rows = exportData.map(project => {
+  const periodoTipo = project.periodo_nombre.includes('Invierno') || project.periodo_nombre.includes('Verano') ? 'Intensivo' : 'Regular';
+  const pmt = project.momento ? `PMT${project.momento}` : "";
+  const claveMap = {
+    'Intensivo': ['1069', '1070', '1071'],
+    'Regular': ['1065', '3041', '1066', '1067', '1068', '1058']
+  };
+  const clave = claveMap[periodoTipo][(project.momento || 1) - 1] || '';
+  const claveMateria = `WA${clave}`;
+  const fechaImplementacion = `${new Date(project.fecha_inicio).toLocaleDateString('es-MX')} al ${new Date(project.fecha_final).toLocaleDateString('es-MX')}`;
+  const modalidadMap = {
+    'presencial': 'PSP | Proyecto Solidario Presencial',
+    'en línea': 'CLIN | Proyecto Solidario Línea',
+    'mixto': 'CLIP | Proyecto Solidario Mixto'
+  };
+  const nomenclatura = `PS ${project.momento || ""} ${project.nombre_proyecto} - ${project.osf_nombre} ${project.periodo_nombre}`;
 
-    const rows = exportData.map(project => [
-      "", // email
-      "Centro-Occidente",
-      "PUE",
-      "", // CRN
-      "", // Grupo
-      "WA1065",
-      project.periodo_nombre.includes("Invierno") ? "Intensivo" : "Regular",
-      project.periodo_nombre,
-      "", // FECHA
-      project.osf_nombre,
-      `${project.mision || ""} ${project.vision || ""} ${project.objetivos || ""}`,
-      project.poblacion || "",
-      project.num_beneficiarios || "",
-      Array.isArray(project.ods) ? project.ods.filter(Boolean).join(", ") : "",
-      project.nombre_responsable || "",
-      project.correo_responsable || "",
-      project.nombre_proyecto || "",
-      project.problema_social || "",
-      project.tipo_vulnerabilidad || "",
-      project.rango_edad || "",
-      project.zona || "",
-      project.numero_beneficiarios || "",
-      project.objetivo_general || "",
-      Array.isArray(project.ods) ? project.ods.filter(Boolean).join(", ") : "",
-      project.lista_actividades_alumno || "",
-      project.producto_a_entregar || "",
-      project.entregable_desc || "",
-      project.medida_impacto_social || "",
-      project.modalidad_desc || "",
-      "", // horario
-      Array.isArray(project.carreras) ? project.carreras.filter(Boolean).join(", ") : "",
-      project.competencias || "",
-      project.cantidad || "",
-      project.modalidad || "",
-      project.direccion || "",
-      project.enlace_maps || "",
-      `${project.horas || ""} horas`,
-      project.valor_promueve || "",
-      project.surgio_unidad_formacion || "",
-      project.periodo_nombre || ""
-    ]);
+  return [
+    "aramirez.lobaton@tec.mx", // Email
+    "Centro-Occidente",        // Región
+    "PUE",                     // Campus
+    "", "",                    // CRN, Grupo
+    claveMateria,              // Clave de la materia
+    periodoTipo+" "+project.periodo_nombre, // Todo el periodo del año
+    pmt,    // Periodo
+    fechaImplementacion,       // Fecha de implementación
+    project.osf_nombre,        // OSF
+    `${project.mision || ""} ${project.vision || ""} ${project.objetivos || ""}`, // Misión, visión, objetivos
+    project.poblacion || "",   // Población
+    project.num_beneficiarios || "", // Beneficiarios OSF
+    Array.isArray(project.ods) ? project.ods.filter(Boolean).join(", ") : "", // ODS OSF
+    `${project.nombre_responsable || ""}, ${project.telefono || ""}, ${project.correo_responsable || ""}, ${project.puesto_responsable || ""}`, // Datos del representante
+    project.correo_responsable || "", // Contacto general
+    project.pagina_web_redes || "",   // Link OSF
+    project.nombre_proyecto || "",    // Nombre del proyecto
+    nomenclatura,                     // Nomenclatura
+    "",                               // Diagnóstico previo
+    project.problema_social || "",    // Problema social
+    project.tipo_vulnerabilidad || "",
+    project.rango_edad || "",
+    "", "",                           // Otro tipo de vulnerabilidad, otro rango
+    project.zona || "",
+    project.numero_beneficiarios || "",
+    project.objetivo_general || "",
+    "",                               // Enfoque del proyecto
+    Array.isArray(project.ods) ? project.ods.filter(Boolean).join(", ") : "", // ODS del proyecto
+    "",                               // Otro ODS
+    project.lista_actividades_alumno || "",
+    project.producto_a_entregar || "",
+    project.entregable_desc || "",
+    project.medida_impacto_social || "",
+    "", "",                           // Días de la semana, horario
+    Array.isArray(project.carreras) ? project.carreras.filter(Boolean).join(", ") : "",
+    project.competencias || "",
+    project.cantidad || "",
+    modalidadMap[project.modalidad] || "",
+    project.direccion+"\n"+project.enlace_maps || "",
+    "",
+    `${project.horas || ""} horas`,
+    project.valor_promueve || "",
+    project.surgio_unidad_formacion || "",
+    project.periodo_nombre || ""
+  ];
+});
+
 
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: `${sheetName}!A3`,
+      range: `${sheetName}!C4`,
       valueInputOption: 'RAW',
       requestBody: {
         values: rows,
@@ -414,6 +403,105 @@ app.post('/sheets/export', async (req, res) => {
   } catch (error) {
     console.error('❌ Error exporting to Google Sheets:', error);
     res.status(500).json({ error: 'Failed to export to Google Sheets' });
+  }
+});
+
+// Endpoint to send information to Google Sheets on Programación sheet
+app.post('/sheets/export-programacion', async (req, res) => {
+  try {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: '../env/ss-dashboard-461116-680a882160af.json',
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+
+    const client = await auth.getClient();
+    const sheets = google.sheets({ version: 'v4', auth: client });
+
+    const spreadsheetId = '1lMG8Gk2_RUWxE94hqO-d57jLc6iLqf7tWgJ5YrqhhMQ';
+    const sheetName = 'Programación';
+
+    const exportData = await db.any(`
+      SELECT 
+        p.proyecto_id,
+        p.nombre_proyecto,
+        p.modalidad,
+        osf.nombre AS osf_nombre,
+        mp.horas,
+        mp.momento,
+        pa.nombre AS periodo_nombre,
+        pa.tipo AS periodo_tipo
+      FROM proyecto p
+      JOIN osf ON p.osf_id = osf.osf_id
+      JOIN momentos_periodo mp ON p.momento_id = mp.momento_id
+      JOIN periodo_academico pa ON mp.periodo_id = pa.periodo_id
+      ORDER BY p.proyecto_id;
+    `);
+
+    const modalidadIrisMap = {
+      'presencial': '--',
+      'mixto': 'CLIP',
+      'en línea': 'CLIN'
+    };
+
+    const modalidadLabelMap = {
+      'presencial': 'Presencial',
+      'mixto': 'Mixto',
+      'en línea': 'En línea'
+    };
+
+    const claveMap = {
+      'Intensivo': ['1069', '1070', '1071'],
+      'Regular': ['1065', '3041', '1066', '1067', '1068', '1058']
+    };
+
+    const rows = exportData.map((project, index) => {
+      const periodoTipo = project.periodo_nombre.includes('Invierno') || project.periodo_nombre.includes('Verano') ? 'Intensivo' : 'Regular';
+      const curso = claveMap[periodoTipo]?.[project.momento - 1] || '';
+      const clave = `WA${curso}`;
+      const pmt = `PMT${project.momento}`;
+      const modalidadIris = modalidadIrisMap[project.modalidad] || '';
+      const subcategoria = modalidadLabelMap[project.modalidad] || '';
+
+      return [
+        `${project.horas} Hrs`, // Horas
+        'WA',                   // Bloque/Materia
+        curso,                 // Curso
+        clave,                 // Clave
+        index + 1,             // Numeración
+        '', '', '',                // #-Interno, CRN, GRUPO
+        pmt,                   // PMT
+        modalidadIris,         // Información adicional para IRIS
+        subcategoria,          // Subcategoría
+        project.osf_nombre,    // OSF
+        project.nombre_proyecto // Proyecto
+      ];
+    });
+
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `${sheetName}!A12`,
+      valueInputOption: 'RAW',
+      requestBody: {
+        values: rows,
+      },
+    });
+
+    res.status(200).json({
+      message: '✅ Exported to Programación sheet successfully!',
+      totalProjects: exportData.length,
+      preview: exportData.slice(0, 2).map((p, i) => ({
+        proyecto: p.nombre_proyecto,
+        osf: p.osf_nombre,
+        modalidad: p.modalidad,
+        horas: p.horas,
+        numeracion: i + 1,
+        pmt: `PMT${p.momento}`
+      }))
+    });
+
+  } catch (error) {
+    console.error('❌ Error exporting to Programación sheet:', error);
+    res.status(500).json({ error: 'Failed to export to Programación sheet' });
   }
 });
 
