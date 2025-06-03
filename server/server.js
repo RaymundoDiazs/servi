@@ -39,7 +39,7 @@ const cn = {
     port: 5432,
     database: 'servi',
     user: 'postgres',
-    password: 'postgres',
+    password: 'yahelito346',
     allowExitOnIdle: true
 }
 const db = pgp(cn);
@@ -1161,7 +1161,7 @@ app.post('/sheets/export-programacion', async (req, res) => {
     const modalidadLabelMap = {
       'presencial': 'Presencial',
       'mixto': 'Mixto',
-      'en línea': 'En línea'
+      'en linea': 'En línea'
     };
 
     const claveMap = {
