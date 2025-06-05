@@ -4,7 +4,7 @@ const readline = require('readline');
 const { google } = require('googleapis');
 
 const CREDENTIALS_PATH = '../env/client_secret_195575088614-lsu4amvphautte6ul6k6t7tued9coa1g.apps.googleusercontent.com.json';
-const TOKEN_PATH = 'token.json';
+const TOKEN_PATH = '../env/token.json';
 const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
 
 const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH));

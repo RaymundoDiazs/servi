@@ -1038,7 +1038,7 @@ app.post('/sheets/export', async (req, res) => {
   const fechaImplementacion = `${new Date(project.fecha_inicio).toLocaleDateString('es-MX')} al ${new Date(project.fecha_final).toLocaleDateString('es-MX')}`;
   const modalidadMap = {
     'presencial': 'PSP | Proyecto Solidario Presencial',
-    'en línea': 'CLIN | Proyecto Solidario Línea',
+    'en linea': 'CLIN | Proyecto Solidario Línea',
     'mixto': 'CLIP | Proyecto Solidario Mixto'
   };
   const nomenclatura = `PS ${project.momento || ""} ${project.nombre_proyecto} - ${project.osf_nombre} ${project.periodo_nombre}`;
@@ -1149,7 +1149,25 @@ app.post('/sheets/export-programacion', async (req, res) => {
       JOIN osf ON p.osf_id = osf.osf_id
       JOIN momentos_periodo mp ON p.momento_id = mp.momento_id
       JOIN periodo_academico pa ON mp.periodo_id = pa.periodo_id
-      ORDER BY p.proyecto_id;
+      ORDER BY 
+      CASE 
+        WHEN pa.tipo = 'semestral' AND mp.momento = 1 THEN 1
+        WHEN pa.tipo = 'semestral' AND mp.momento = 2 THEN 2
+        WHEN pa.tipo = 'semestral' AND mp.momento = 3 THEN 3
+        WHEN pa.tipo = 'semestral' AND mp.momento = 4 THEN 4
+        WHEN pa.tipo = 'semestral' AND mp.momento = 5 THEN 5
+        WHEN pa.tipo = 'semestral' AND mp.momento = 6 THEN 6
+        WHEN pa.tipo = 'intensivo' AND mp.momento = 1 THEN 7
+        WHEN pa.tipo = 'intensivo' AND mp.momento = 2 THEN 8
+        WHEN pa.tipo = 'intensivo' AND mp.momento = 3 THEN 9
+        ELSE 99
+      END,
+        CASE 
+        WHEN p.modalidad = 'presencial' THEN 1
+        WHEN p.modalidad = 'mixto' THEN 2
+        WHEN p.modalidad = 'en linea' THEN 3
+        ELSE 99
+        END
     `);
 
     const modalidadIrisMap = {

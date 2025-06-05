@@ -30,11 +30,13 @@ async function sendWelcomeEmail(to, name) {
 
   const emailLines = [
     `To: ${to}`,
-    'Subject: ¡Bienvenido a la plataforma!',
+    'Subject: =?UTF-8?B?' + Buffer.from('¡Bienvenido a la plataforma!').toString('base64') + '?=',
     'Content-Type: text/plain; charset="UTF-8"',
+    'Content-Transfer-Encoding: 7bit',
     '',
     `Hola ${name},\n\n¡Bienvenido! Tu registro fue exitoso.\n\nSaludos,\nEquipo de Soporte`
   ];
+
 
   const email = emailLines.join('\n');
   const encodedMessage = Buffer.from(email).toString('base64').replace(/\+/g, '-').replace(/\//g, '_');
