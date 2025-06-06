@@ -352,7 +352,11 @@ const RespuestasAlumnos = ( {test = ''} ) => {
       <div className="edit-buttons-container">
       {isEditing && (
           <>
-          <button className="edit-button" onClick={isEditing ? () => setShowPopUp(true) : () => setIsEditing(true)}>
+          <button className="edit-button" onClick={
+
+            sessionType === "ss" ? () => handleSave() : () => setShowPopUp(true)
+            
+          }>
             <FiEdit3 /> {isEditing ? "Guardar" : "Editar"}
           </button>
           <button className="cancel-button" onClick={handleCancel}>

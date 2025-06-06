@@ -138,7 +138,7 @@ const getCarrerasRandom = () => {
 
 
 useEffect(() => {
-  if (sessionType === "alumno" && userId.special_id) {
+  if (sessionType === "alumno" && userId && userId.special_id) {
   console.log(userId)
   fetch("http://localhost:8000/proyectos/alumnos/"+userId.special_id)
     .then((res) => res.json())
@@ -184,7 +184,7 @@ useEffect(() => {
     });
   }
 
-  if (sessionType === "osf" && userId) {
+  if (sessionType === "osf" && userId && userId.special_id) {
   fetch("http://localhost:8000/proyectos/"+userId.special_id)
     .then((res) => res.json())
     .then((proyectos) => {
