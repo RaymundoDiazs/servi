@@ -49,9 +49,9 @@ const FormsAlumno = () => {
         const value = e.target.value.toLowerCase();
         setMatricula(value);
 
-        const regex = /^[Aa]01\d{6}$/;
+        const regex = /^[Aa]\d{8}$/;
         if (!regex.test(value)) {
-            setMensajeMatricula("Matrícula inválida. Debe seguir el formato A01XXXXXX.");
+            setMensajeMatricula("Matrícula inválida. Debe seguir el formato AXXXXXXXX.");
             setFormData({ ...formData, matricula: null });
         } else {
             const response = await fetch(`http://localhost:8000/users/checkMatricula/`+value);
@@ -72,18 +72,37 @@ const FormsAlumno = () => {
         setFormData({ ...formData, carrera: e.target.value });
     };
 
+    const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
+    const [passwordValidations, setPasswordValidations] = useState({
+        length: false,
+        uppercase: false,
+        number: false,
+        special: false
+    });
+
     // Validación de contraseña segura
     const handlePasswordChange = (e) => {
         const value = e.target.value;
-        const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!regex.test(value)) {
-            setMensajeError("La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.");
+        const validations = {
+            length: value.length >= 8,
+            uppercase: /[A-Z]/.test(value),
+            number: /\d/.test(value),
+            special: /[@$!%*?&]/.test(value)
+        };
+        setPasswordValidations(validations);
+        const allValid = Object.values(validations).every(Boolean);
+        if (!allValid) {
+            setMensajeError(null); // No mostrar mensaje general, solo validaciones
             setFormData({ ...formData, password: null });
         } else {
             setMensajeError(null);
             setFormData({ ...formData, password: value });
         }
         setPassword(value);
+    };
+
+    const toggleShowPassword = () => {
+        setShowPassword((prev) => !prev);
     };
 
     // Validación de número de teléfono internacional
@@ -219,14 +238,36 @@ const FormsAlumno = () => {
                 {mensajeNumero && <div className="error-message">{mensajeNumero}</div>} {/* Mensaje de error */}
                 <div>
                     <label htmlFor="password">Ingresa una contraseña para tu nueva cuenta:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        required
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            id="password"
+                            name="password"
+                            value={password}
+                            onChange={handlePasswordChange}
+                            required
+                        />
+                        <button type="button" onClick={toggleShowPassword} style={{marginLeft: '8px'}}>
+                            {showPassword ? "Ocultar" : "Ver"}
+                        </button>
+                    </div>
+                    <ul style={{ listStyle: 'none', paddingLeft: 0, fontSize: '0.95em', margin: '8px 0 0 0' }}>
+                        <li style={{ color: passwordValidations.length ? 'green' : 'red' }}>
+                            {passwordValidations.length ? '✔' : '✖'} Al menos 8 caracteres
+                        </li>
+                        <li style={{ color: passwordValidations.uppercase ? 'green' : 'red' }}>
+                            {passwordValidations.uppercase ? '✔' : '✖'} Una letra mayúscula
+                        </li>
+                        <li style={{ color: passwordValidations.number ? 'green' : 'red' }}>
+                            {passwordValidations.number ? '✔' : '✖'} Un número
+                        </li>
+                        <li style={{ color: passwordValidations.special ? 'green' : 'red' }}>
+                            {passwordValidations.special ? '✔' : '✖'} Un carácter especial (@$!%*?&)
+                        </li>
+                    </ul>
+                    {password && !Object.values(passwordValidations).every(Boolean) && (
+                        <div className="error-message">La contraseña no cumple con todos los requisitos.</div>
+                    )}
                 </div>
                 <div>
                     <label>
