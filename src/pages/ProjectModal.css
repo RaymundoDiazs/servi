@@ -669,3 +669,150 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+
+/*Actividades parte css*/
+.seccion-actividades {
+  background: rgba(248, 250, 255, 0.76);
+  border-radius: 1.2rem;
+  padding: 2.2rem 2.5rem 2.2rem 2.5rem;
+  box-shadow: 0 6px 36px 0 rgba(100,120,180,0.05);
+  margin: 2rem 0;
+}
+
+.act-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #23272f;
+  letter-spacing: 0.01em;
+  border-radius: 0.6rem 0.6rem 0 0;
+  padding: 0.55rem 1.2rem;
+}
+
+.act-list {
+  columns: 2 340px;
+  column-gap: 2.4rem;
+  padding-left: 1.5rem;
+  margin: 0;
+  font-size: 1.07rem;
+}
+
+.act-list li {
+  color: #2b3342;
+  font-size: 1.07rem;
+  margin-bottom: 0.55rem;
+  line-height: 1.8;
+  break-inside: avoid;
+}
+
+@media (max-width: 850px) {
+  .act-list {
+    columns: 1;
+    column-gap: 0.7rem;
+    padding-left: 1.2rem;
+  }
+  .seccion-act {
+    padding: 1.1rem 0.8rem;
+    border-radius: 0.7rem;
+  }
+  .act-title {
+    font-size: 1.22rem;
+    padding: 0.4rem 1rem;
+  }
+}
+
+
+/* descripcion Modalidad CSS*/
+
+
+.seccion-modalidad-glass {
+  background: rgba(228, 238, 255, 0.75); /* azul frío glass */
+  border-radius: 1.4rem;
+  padding: 2.2rem 2.5rem 1.8rem 2.5rem;
+  margin: 2.2rem 0 1.2rem 0;
+  box-shadow: 0 4px 32px 0 rgba(100,120,180,0.07);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  /* Glassmorphism */
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+}
+
+.seccion-modalidad-glass::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 130px;
+  height: 130px;
+  border-radius: 60% 40% 60% 80%/70% 50% 60% 50%;
+  background: linear-gradient(135deg, #8ea9fd 60%, #e6ecfa 100%);
+  opacity: 0.27;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.modalidad-header {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.22rem;
+  color: #3452b6;
+  background: rgba(255,255,255,0.47);
+  border-radius: 0.85rem 0.85rem 0 0;
+  padding: 0.85rem 1.25rem 0.8rem 1.35rem;
+  margin-bottom: 1.3rem;
+  box-shadow: 0 2px 8px 0 rgba(120,140,180,0.04);
+  position: relative;
+  z-index: 2;
+  letter-spacing: 0.01em;
+}
+
+.modalidad-header .info-icon {
+  font-size: 1.35rem;
+  margin-right: 0.68rem;
+  color: #6180ea;
+  flex-shrink: 0;
+}
+
+.modalidad-content {
+  font-size: 1.10rem;
+  color: #2e3758;
+  line-height: 2.05;
+  padding-left: 0.25rem;
+  z-index: 2;
+  position: relative;
+  min-height: 100px;
+}
+
+.modalidad-line {
+  margin-bottom: 0.18rem;
+  word-break: break-word;
+}
+
+.modalidad-separador {
+  width: 100%;
+  height: 1.3px;
+  margin-top: 1.3rem;
+  background: linear-gradient(90deg, #d7e4ff 10%, #cadcfb 55%, #f8fafc 90%);
+  opacity: 0.6;
+  border-radius: 1.4px;
+}
+
+@media (max-width: 850px) {
+  .seccion-modalidad-glass {
+    padding: 1.2rem 0.9rem 1.3rem 1.1rem;
+    border-radius: 0.85rem;
+  }
+  .modalidad-header {
+    font-size: 1.04rem;
+    padding: 0.6rem 0.8rem;
+  }
+  .modalidad-content {
+    font-size: 0.97rem;
+    min-height: 70px;
+  }
+}

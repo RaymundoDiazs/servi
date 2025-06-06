@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./RightBar.css";
 
 const lupiFramesRight = [
@@ -10,9 +10,35 @@ const lupiFramesRight = [
   "lupi6.png",
 ];
 
+import { SessionContext } from "../Contexts/SessionContext"; // mencione la sesion para decir el nombre
+
+
 const piezasRandom = ["puzzleg1.png","puzzleg2.png","puzzleg3.png","puzzleg4.png"];
 
 const RightBar = ({ isOpen, onClose, setShowCharacter, setShowAICharacter, setShowPetMode }) => {
+
+  //Sea Teus/Usuario
+  const [vista, setVista] = useState("usuario"); //como inicia teus/usuario
+
+
+  //Mostrar nombre usuario
+  const { sessionType, sessionId } = useContext(SessionContext);
+const [usuario, setUsuario] = useState(null);
+
+//COnseguir nombre usuario
+useEffect(() => {
+  if (!sessionType || !sessionId) return;
+  const endpoint =
+    sessionType === "alumno"
+      ? `http://localhost:8000/alumnos/user/${sessionId}`
+      : `http://localhost:8000/osf/${sessionId}`;
+  fetch(endpoint)
+    .then((res) => res.json())
+    .then((data) => setUsuario(data))
+    .catch((err) => console.error("Error al cargar perfil:", err));
+}, [sessionType, sessionId]);
+
+  
   const [frameIndex, setFrameIndex] = useState(0);
   const [modo, setModo] = useState("Seguir Cursor");
   const [modeloIA, setModeloIA] = useState("Base");
@@ -124,147 +150,212 @@ const RightBar = ({ isOpen, onClose, setShowCharacter, setShowAICharacter, setSh
       <div className="rightbar-panel">
         <button className="rightbar-close" onClick={onClose}>✕</button>
 
-        <h2 className="rightbar-title">Menú Teus</h2>
-
-        <div className="lupi-container">
-          <img
-            src={lupiFramesRight[frameIndex]}
-            alt="Lupi animado"
-            className="lupi-sprite"
-          />
-        </div>
-
-        <ul className="rightbar-options">
-          {['Seguir Cursor', 'Asistente', 'Mascota virtual'].map((op) => (
-            <li
-              key={op}
-              style={{
-                color: modo === op ? '#fff' : '#ccc',
-                fontWeight: modo === op ? 600 : 400,
-                cursor: 'pointer',
-              }}
-              onClick={() => setModo(op)}
-            >
-              {op}
-            </li>
-          ))}
-        </ul>
-
-        {/*Contenido dinamico variando que se escoga */}
-        <div style={{ marginTop: "2rem", width: "100%" }}>
-          {modo === "Seguir Cursor" && (
-            <>
-              <div style={{ color: "white", marginBottom: "1rem", textAlign: "center" }}>
-                Mascota TEC.<br />Teus feliz. 
-              </div>
-            </>
-          )}
-
-          {modo === "Asistente" && (
-            <>
-              <label style={{ color: "white", fontWeight: "bold" }}>Modelo IA</label>
-              <select
-                value={modeloIA}
-                onChange={(e) => setModeloIA(e.target.value)}
-                style={{ width: "100%", padding: "0.5rem", borderRadius: "10px", marginTop: "0.5rem" }}
-              >
-                <option>Base</option>
-                <option>Explorador</option>
-                <option>Analítico</option>
-              </select>
-
-              {/* Canvas de piezas */}
-              <h4 style={{ color: "white", marginTop: "1.5rem" }}>Arma tu IA</h4>
-              <div
-                style={{
-                  width: "100%",
-                  height: "300px",
-                  background: "#e5e7eb",
-                  borderRadius: "12px",
-                  marginTop: "1rem",
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-              >
-                {piezas.map((pieza) => (
-                  <div
-                    key={pieza.id}
-                    onMouseDown={(e) => handleMouseDown(e, pieza.id)}
-                    style={{
-                      width: "150px", // tam piezas
-                      height: "150px",
-                      backgroundImage: `url(${pieza.image})`, //imagen para la pieza
-                      position: "absolute",
-                      left: pieza.x,
-                      top: pieza.y,
-                      borderRadius: "8px",
-                      cursor: "grab",
-                      userSelect: "none",
-                      backgroundSize: "cover",
-                    }}
-                  />
-                ))}
-              </div>
-              <div style={{ color: "gray", fontSize: "12px", marginTop: "0.5rem" }}>
-                Arrastra y acomoda las piezas.
-              </div>
-
-              {/* slider (aun sin uso=) */}
-              <label style={{ color: "white", fontWeight: "bold", marginTop: "2rem", display: "block" }}>Nivel de exploración</label>
-              <input
-                type="range"
-                value={curiosidad}
-                onChange={(e) => setCuriosidad(Number(e.target.value))}
-                min={0}
-                max={100}
-                style={{ width: "100%" }}
-              />
-              <div style={{ color: "white", marginTop: "0.3rem" }}>{curiosidad}% de curiosidad</div>
-
-              {/*Botones de Reset y Agregar nueva pieza */}
-              <div style={{ marginTop: "1rem", textAlign: "center" }}>
+        <div className="rightbar-tabs">
   <button
-    onClick={resetPieces}
-    className="rightbar-button3" // estilo boton clase
+    className={`rightbar-tab ${vista === "teus" ? "active" : ""}`}
+    onClick={() => setVista("teus")}
   >
-    Reset Piezas
+     Teus
   </button>
   <button
-    onClick={addNewPiece}
-    className="rightbar-button3" 
+    className={`rightbar-tab ${vista === "usuario" ? "active" : ""}`}
+    onClick={() => setVista("usuario")}
   >
-    Agregar Nueva Pieza
+     Usuario
   </button>
 </div>
 
-            </>
-          )}
 
-          {modo === "Mascota virtual" && (
-            <>
-              <div style={{ color: "white", marginBottom: "1rem", textAlign: "center" }}>
-                Mascota modo.<br />Random stuff
-              </div>
-            </>
-          )}
+
+
+
+
+{vista === "teus" && (
+  <div className="lupi-container">
+    <img
+      src={lupiFramesRight[frameIndex]}
+      alt="Lupi animado"
+      className="lupi-sprite"
+    />
+  </div>
+)}
+
+{vista === "usuario" && (
+  <div className="perfil-avatar-circulo" style={{ margin: "1.5rem auto" }}>
+    <div className="avatar-circle-border">
+      <img
+        src="/avatar.png"
+
+      />
+    </div>
+  </div>
+)}
+
+
+
+
+
+       <div style={{ marginTop: "2rem", width: "100%" }}>
+  {vista === "teus" ? (
+    <>
+      <ul className="rightbar-options">
+        {['Seguir Cursor', 'Asistente', 'Mascota virtual'].map((op) => (
+          <li
+            key={op}
+            style={{
+              color: modo === op ? '#fff' : '#ccc',
+              fontWeight: modo === op ? 600 : 400,
+              cursor: 'pointer',
+            }}
+            onClick={() => setModo(op)}
+          >
+            {op}
+          </li>
+        ))}
+      </ul>
+
+      {modo === "Seguir Cursor" && (
+        <div style={{ color: "white", marginBottom: "1rem", textAlign: "center" }}>
+          Mascota TEC.<br />Teus feliz.
         </div>
+      )}
 
-        <button
-          onClick={aplicarCambios}
+      {modo === "Asistente" && (
+        <>
+          <label style={{ color: "white", fontWeight: "bold" }}>Modelo IA</label>
+          <select
+            value={modeloIA}
+            onChange={(e) => setModeloIA(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              borderRadius: "10px",
+              marginTop: "0.5rem",
+            }}
+          >
+            <option>Base</option>
+            <option>Explorador</option>
+            <option>Analítico</option>
+          </select>
+
+          <h4 style={{ color: "white", marginTop: "1.5rem" }}>Arma tu IA</h4>
+          <div
+            style={{
+              width: "100%",
+              height: "300px",
+              background: "#e5e7eb",
+              borderRadius: "12px",
+              marginTop: "1rem",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            {piezas.map((pieza) => (
+              <div
+                key={pieza.id}
+                onMouseDown={(e) => handleMouseDown(e, pieza.id)}
+                style={{
+                  width: "150px",
+                  height: "150px",
+                  backgroundImage: `url(${pieza.image})`,
+                  position: "absolute",
+                  left: pieza.x,
+                  top: pieza.y,
+                  borderRadius: "8px",
+                  cursor: "grab",
+                  userSelect: "none",
+                  backgroundSize: "cover",
+                }}
+              />
+            ))}
+          </div>
+          <div style={{ color: "gray", fontSize: "12px", marginTop: "0.5rem" }}>
+            Arrastra y acomoda las piezas.
+          </div>
+
+          <label
+            style={{
+              color: "white",
+              fontWeight: "bold",
+              marginTop: "2rem",
+              display: "block",
+            }}
+          >
+            Nivel de exploración
+          </label>
+          <input
+            type="range"
+            value={curiosidad}
+            onChange={(e) => setCuriosidad(Number(e.target.value))}
+            min={0}
+            max={100}
+            style={{ width: "100%" }}
+          />
+          <div style={{ color: "white", marginTop: "0.3rem" }}>
+            {curiosidad}% de curiosidad
+          </div>
+
+          <div style={{ marginTop: "1rem", textAlign: "center" }}>
+            <button onClick={resetPieces} className="rightbar-button3">
+              Reset Piezas
+            </button>
+            <button onClick={addNewPiece} className="rightbar-button3">
+              Agregar Nueva Pieza
+            </button>
+          </div>
+        </>
+      )}
+
+      {modo === "Mascota virtual" && (
+        <div style={{ color: "white", marginBottom: "1rem", textAlign: "center" }}>
+          Mascota modo.<br />Random stuff
+        </div>
+      )}
+
+      <button
+        onClick={aplicarCambios}
+        style={{
+          marginTop: "2rem",
+          padding: "0.7rem",
+          borderRadius: "12px",
+          width: "100%",
+          fontWeight: 600,
+          background: "#6366f1",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        Aplicar cambios
+      </button>
+    </>
+  ) : (
+    <>
+      <ul className="user-menu">
+        <li> Mi perfil</li>
+        <li> Cambiar contraseña</li>
+        <li
           style={{
-            marginTop: "2rem",
-            padding: "0.7rem",
-            borderRadius: "12px",
-            width: "100%",
-            fontWeight: 600,
-            background: "#6366f1",
-            color: "white",
-            border: "none",
-            cursor: "pointer"
+            color: "#f87171",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            sessionStorage.clear(); // o localStorage.clear()
+            window.location.href = "/login";
           }}
         >
-          Aplicar cambios
-        </button>
+           Cerrar sesión
+        </li>
+      </ul>
+      <p className="user-info">
+  Sesión activa como: <strong>{usuario?.nombre || "Nombre"}</strong>
+</p>
+
+    </>
+  )}
+</div>
+
       </div>
     </div>
   );

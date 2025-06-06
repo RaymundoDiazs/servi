@@ -266,3 +266,85 @@
       }
   }
     
+
+
+
+/* Usuario y no teus*/
+
+.rightbar-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.rightbar-tab {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #ccc;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.3s, border 0.3s;
+}
+
+.rightbar-tab.active {
+  color: white;
+  border-bottom: 2px solid #818cf8;
+}
+
+.user-menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.5rem;
+}
+
+.user-menu li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-menu li:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding-left: 0.5rem;
+}
+
+.user-info {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+
+/*perfil usuario foto*/
+.perfil-avatar-circulo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.avatar-circle-border {
+  width: 96px;
+  height: 96px;
+  background-color: #f1f5f9;
+  border-radius: 999px;
+  box-shadow: 0 0 0 6px #dbeafe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.avatar-circle-border img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 999px;
+}

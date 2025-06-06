@@ -37,9 +37,9 @@ const pgp = require('pg-promise')();
 const cn = {
     host: 'localhost',
     port: 5432,
-    database: 'servi',
+    database: 'serviv11',
     user: 'postgres',
-    password: 'postgres',
+    password: '3166',
     allowExitOnIdle: true
 }
 const db = pgp(cn);
@@ -827,29 +827,10 @@ app.listen(PORT, () => {
 });
 
 
-//RAY endpoints
-// Actualizar proyecto: modalidad y horas
 
 
-// ✅ ÚNICO endpoint válido
-app.put('/api/proyectos/:id', (req, res) => {
-  const proyectoId = req.params.id;
-  const { modalidad } = req.body;
+//Endpoint rey
 
-  const modalidadesValidas = ["presencial", "en linea", "mixto"];
-  if (!modalidadesValidas.includes(modalidad.toLowerCase())) {
-    return res.status(400).json({ error: "Modalidad no válida" });
-  }
-
-  db.none('UPDATE proyecto SET modalidad = $1 WHERE proyecto_id = $2', [modalidad, proyectoId])
-    .then(() => res.status(200).json({ message: "Proyecto actualizado correctamente" }))
-    .catch((err) => {
-      console.error("❌ Error al actualizar el proyecto:", err);
-      res.status(500).json({ error: "Error en la base de datos" });
-    });
-});
-
-// Endpoint para actualizar detalles completos de un proyecto
 app.put('/api/proyectos/:id/detalles', async (req, res) => {
   try {
     const proyectoId = req.params.id;
@@ -861,10 +842,10 @@ app.put('/api/proyectos/:id/detalles', async (req, res) => {
       objetivo_general, estado, cantidad,
     } = req.body;
 
-    console.log("🟨 Backend recibió:", req.body);
+    console.log(" Backend recibió:", req.body);
 
     await db.tx(async t => {
-      console.log("🔧 Actualizando proyecto...");
+      console.log(" Actualizando proyecto...");
 
       await t.none(`
         UPDATE proyecto SET
@@ -881,20 +862,24 @@ app.put('/api/proyectos/:id/detalles', async (req, res) => {
           rango_edad = int4range($11, $11 + 1),
           lista_actividades_alumno = $12,
           modalidad_desc = $13,
-          objetivo_general = $14,
-          estado = $15,
-          cantidad = $16
+          pregunta_descarte = $14,
+          objetivo_general = $15,
+          estado = $16,
+          cantidad = $17
         WHERE proyecto_id = $17
       `, [
         zona, tipo_vulnerabilidad, numero_beneficiarios, producto_a_entregar,
         medida_impacto_social, competencias, direccion, enlace_maps,
         problema_social, valor_promueve, rango_edad,
-        lista_actividades_alumno, modalidad_desc,
-        objetivo_general, estado, cantidad, proyectoId
+        lista_actividades_alumno, modalidad_desc, pregunta_descarte,
+        objetivo_general, estado,cantidad ,proyectoId
       ]);
+
+      console.log("Proyecto actualizado");
 
       console.log("🔁 Borrando carreras actuales");
       await t.none('DELETE FROM proyecto_carrera WHERE proyecto_id = $1', [proyectoId]);
+      console.log("Carreras borradas");
 
       console.log("➕ Insertando nuevas carreras");
       const inserts = carreras.map(nombre =>
@@ -905,35 +890,72 @@ app.put('/api/proyectos/:id/detalles', async (req, res) => {
       );
 
       await t.batch(inserts);
+      console.log("Carreras insertadas");
     });
 
-    console.log("🟢 Todo correcto, enviando respuesta");
+    console.log(" Todo correcto, enviando respuesta");
     res.status(200).json({ message: "Detalles actualizados correctamente" });
 
   } catch (err) {
-    console.error("❌ ERROR:", err);
+    console.error("ERROR:", err);
     res.status(500).json({ error: "Error al actualizar detalles del proyecto" });
   }
 });
 
 
-// Endpoint para actualizar solo modalidad y horas
+
+
+
+
+// ÚNICO endpoint válido
 app.put('/api/proyectos/:id', (req, res) => {
   const proyectoId = req.params.id;
-  const { modalidad, horas } = req.body;
+  //const { modalidad, horas } = req.body;
+  const { modalidad } = req.body;
+
 
   const modalidadesValidas = ["presencial", "en linea", "mixto"];
-  if (!modalidad || !modalidadesValidas.includes(modalidad.toLowerCase())) {
+  if (!modalidadesValidas.includes(modalidad.toLowerCase())) {
     return res.status(400).json({ error: "Modalidad no válida" });
   }
 
-  db.none('UPDATE proyecto SET modalidad = $1, horas = $2 WHERE proyecto_id = $3', [modalidad, horas, proyectoId])
+  //db.none('UPDATE proyecto SET modalidad = $1, horas = $2 WHERE proyecto_id = $3', [modalidad, horas, proyectoId])
+  db.none('UPDATE proyecto SET modalidad = $1 WHERE proyecto_id = $2', [modalidad, proyectoId])
+
     .then(() => res.status(200).json({ message: "Proyecto actualizado correctamente" }))
     .catch((err) => {
-      console.error("❌ Error al actualizar el proyecto:", err);
+      console.error(" Error al actualizar el proyecto:", err);
       res.status(500).json({ error: "Error en la base de datos" });
     });
 });
+
+//endpoint recibir alumno 
+// Endpoint para obtener datos del alumno por user_id
+app.get('/alumnos/user/:user_id', (req, res) => {
+  db.oneOrNone('SELECT * FROM alumno WHERE user_id = $1', [req.params.user_id])
+    .then((data) => {
+      if (data) {
+        res.json(data);
+      } else {
+        res.status(404).json({ error: 'Alumno no encontrado para ese user_id' });
+      }
+    })
+    .catch((error) => {
+      console.log('ERROR:', error);
+      res.status(500).json({ error: 'Error en la base de datos' });
+    });
+});
+
+
+
+
+//Fin endpoins Rey
+
+
+
+
+
+
 
 
 // Endpoint to export projects to Google Sheets in Nacional Sheet format

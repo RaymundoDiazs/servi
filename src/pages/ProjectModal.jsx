@@ -554,6 +554,37 @@ Coméntanos con tus propias palabras: ¿Qué buscamos? ¿Qué es lo que crees qu
 )}
 
 
+<div className="seccion-actividades">
+  <div className="act-title">Actividades del Alumno</div>
+  <ul className="act-list">
+    {(editedActividadesAlumno || "")
+      .split(/\n|;/) // Por salto de línea O punto y coma
+      .map((act, i) => act.trim() && <li key={i}>{act.trim()}</li>)
+    }
+  </ul>
+</div>
+
+<div className="seccion-modalidad-glass">
+  <div className="modalidad-header">
+
+    <span>Descripción de la Modalidad</span>
+  </div>
+  <div className="modalidad-content">
+    {(editedModalidadDesc || "")
+      .split(/\n/)
+      .map((linea, i) =>
+        <div key={i} className="modalidad-line">
+          {linea.trim()}
+        </div>
+      )
+    }
+  </div>
+  <div className="modalidad-separador" />
+</div>
+
+
+
+
 {/* === Periodos de Ejecución === */}
 <section style={{ textAlign: "center", margin: "3rem 0" }}>
   <h3 style={{

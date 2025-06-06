@@ -5,26 +5,24 @@ import appleLogo from "/logoservicio.png";
 import lupi2 from "/lupi2.png";
 import jetpackIcon from "/jetpackx3.png";
 import { FaBars } from "react-icons/fa";
-import {
-  FiLogOut,
-} from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 
-
-
-const Header = ({ onMenuClick, toggleCharacter, toggleAI, onRightMenuClick }) => {
-  const navigate = useNavigate();
-  
+const Header = ({
+  onMenuClick,
+  toggleCharacter,
+  toggleAI,
+  onRightMenuClick,
+  className = ""
+}) => {
   const buttons = [
-    { text: "Acerca de" },
-    { text: "Redes sociales" },
-    { text: "Contacto" },
-    { text: "ITESM" }
+    { text: "Perfil de usuario", link: "/perfil_usuario" },
+    { text: "Acerca de", link: "/acerca_de" },
+    { text: "FAQ", link: "/Faq" },
+    { text: "Referencias" },
   ];
 
   return (
-    <header className="apple-header">
-      {/* Botón izquierdo original */}
+    <header className={`apple-header ${className}`}>
+      {/* Boton izquierdo original */}
       <button className="menu-toggle" onClick={onMenuClick}>☰</button>
 
       <img src={appleLogo} alt="Logo" className="apple-logo" />
@@ -41,50 +39,43 @@ const Header = ({ onMenuClick, toggleCharacter, toggleAI, onRightMenuClick }) =>
         )}
       </nav>
 
-      {/* Botones de personaje + botón de RightBar juntos al final */}
-     {/* Botones de personaje + botón de RightBar */}
-     <div
-  className="sprite-buttons"
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: "0.8rem",
-    marginRight: "2.5rem"
-  }}
->
-  {/* Botón de menú derecho SIN clase 'menu-toggle' */}
-  <button
-    className="sprite-toggle-button"
-    title="Abrir menú derecho"
-    onClick={onRightMenuClick}
-  >
-    <FaBars />
-  </button>
+      {/* Botones de personaje + botón de RightBar */}
+      <div
+        className="sprite-buttons"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.8rem",
+          marginRight: "2.5rem"
+        }}
+      >
+        <button
+          className="sprite-toggle-button"
+          title="Abrir menú derecho"
+          onClick={onRightMenuClick}
+        >
+          <FaBars />
+        </button>
 
-  <button
-    className="sprite-toggle-button"
-    title="Activar Lupi"
-    onClick={toggleCharacter}
-  >
-    <img src={lupi2} alt="Lupi" />
-  </button>
+        {
+        <button
+          className="sprite-toggle-button"
+          title="Activar Lupi"
+          onClick={toggleCharacter}
+        >
+          <img src={lupi2} alt="Lupi" />
+        </button>
 
-  <button
-    className="sprite-toggle-button"
-    title="Activar Jetpack IA"
-    onClick={toggleAI}
-  >
-    <img src={jetpackIcon} alt="Jetpack" />
-  </button>
-<div className="logout-button" onClick={() => navigate("/logout")} >
-  <FiLogOut></FiLogOut>
-</div>
-  
-</div>
-
-
-
-
+/*
+        <button
+          className="sprite-toggle-button"
+          title="Activar Jetpack IA"
+          onClick={toggleAI}
+        >
+          <img src={jetpackIcon} alt="Jetpack" />
+        </button>
+        */}
+      </div>
     </header>
   );
 };

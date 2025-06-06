@@ -129,7 +129,7 @@ useEffect(() => {
     if (lastMouseX !== null) {
       const deltaX = Math.abs(e.clientX - lastMouseX);
 
-      if (deltaX > 100) { // 🔥
+      if (deltaX > 100) { // 
         setZigzagCounter(prev => prev + 1);
       }
       
@@ -216,6 +216,7 @@ useEffect(() => {
 // SIGNUP: hover frases y animación
 // =============================== //
 useEffect(() => {
+  
   if (location.pathname !== "/signup") return;
 
   if (hoveredType === "alumno") {
@@ -258,6 +259,7 @@ useEffect(() => {
       animateGroundYTo(fieldY);
     }
 
+    
     // Mostrar texto del campo
     const label = e.target.closest("div")?.querySelector("label")?.innerText;
     if (label) {
@@ -283,7 +285,8 @@ useEffect(() => {
 
 
 
-//console.log("🚀 Texto:", speechText, "| Mostrar:", showSpeech);
+
+//console.log(" Texto:", speechText, "| Mostrar:", showSpeech);
 
 
 
@@ -416,12 +419,6 @@ if (depositPoint && entregando) {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [location]);
 
-  
-
-  
-
-  
-
   useEffect(() => {
     if (location.pathname !== "/") return;
 
@@ -539,6 +536,13 @@ if (depositPoint && entregando) {
     };
   }, [isMoving, location]);
 
+
+  //
+  //FIN protectos
+  //
+
+
+
  // =============================== //
 // DASHBOARD: seguir tarjetas y moverse entre filas (jetpac)
 // =============================== //
@@ -555,7 +559,7 @@ useEffect(() => {
     const isHeaderCovering = characterTop <= headerBottom;
     const canScrollDownMore = window.innerHeight + window.scrollY < document.body.scrollHeight;
 
-    // 🔒 Evitar múltiples triggers conflictivos
+    // Evitar multiples triggers conflictivos
     if (isScrollingRef.current || isDescendingRef.current || isGoingUpRef.current || isJumpingRef.current) return;
 
     if (isHeaderCovering && canScrollDownMore) {
@@ -630,7 +634,7 @@ useEffect(() => {
   
     setTargetX(centerX);
   
-    // 📢 Mostrar globos dinámicos
+    // Mostrar globos dinámicos
     const text = e.currentTarget.innerText.toLowerCase(); // <-- Convertimos a minúsculas para comparar
   
     if (text.includes("proyecto")) {
@@ -697,6 +701,100 @@ useEffect(() => {
 
 
 
+ // =============================== //
+  // Acerca de: TEUS reacciona 
+  // =============================== //
+
+// =============================== //
+const Y_BARRA_ODS = 470; //donde aparecera teus en Acerca_de
+
+
+
+useEffect(() => {
+  if (location.pathname === "/acerca_de") {
+    setGroundY(Y_BARRA_ODS);
+  }
+}, [location]);
+
+
+
+useEffect(() => {
+  if (location.pathname !== "/acerca_de") return;
+
+  const handleMouseMove = (e) => setTargetX(e.clientX);
+  window.addEventListener("mousemove", handleMouseMove);
+  return () => window.removeEventListener("mousemove", handleMouseMove);
+}, [location]);
+
+useEffect(() => {
+  if (location.pathname !== "/acerca_de") return;
+
+  const interval = setInterval(() => {
+    setPosition((prev) => {
+      const dx = targetX - prev.x;
+      const speed = 3;
+      if (Math.abs(dx) < 3) {
+        setIsMoving(false);
+        return prev;
+      }
+      setIsMoving(true);
+      const dir = dx > 0 ? 1 : -1;
+      setDirection(dir > 0 ? "right" : "left");
+      return { x: prev.x + dir * speed };
+    });
+  }, 30);
+
+  return () => clearInterval(interval);
+}, [targetX, location]);
+
+// =============================== //
+// ACERCA DE: hover sobre ODS (hablar + inspección)
+// =============================== //
+useEffect(() => {
+  if (location.pathname !== "/acerca_de") return;
+  const cards = Array.from(document.querySelectorAll(".ods-card-expand"));
+  if (!cards.length) return;
+
+  const handleMouseEnter = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    // Solo movemos X
+    setTargetX(rect.left + rect.width / 2);
+
+    setIsInspecting(true); // Para cambiar sprite a lupa/lupi
+    setSpeechText("ODS: " + e.currentTarget.innerText.split("\n")[0]);
+    setShowSpeech(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsInspecting(false);
+    setShowSpeech(false);
+  };
+
+  cards.forEach((card) => {
+    card.addEventListener("mouseenter", handleMouseEnter);
+    card.addEventListener("mouseleave", handleMouseLeave);
+  });
+
+  return () => {
+    cards.forEach((card) => {
+      card.removeEventListener("mouseenter", handleMouseEnter);
+      card.removeEventListener("mouseleave", handleMouseLeave);
+    });
+  };
+}, [location]);
+
+
+
+//
+//FIN TEUS ACERCA DE
+//
+
+
+
+
+
+
+
   // =============================== //
   // Animacion general
 
@@ -747,7 +845,7 @@ useEffect(() => {
     }, 150); // puedes ajustar la velocidad aquí
   
     return () => clearInterval(animInterval);
-  }, [isMoving, isInspecting, direction, location, userType]); // ✅ ESTA ES LA ÚNICA CIERRE QUE NECESITAS
+  }, [isMoving, isInspecting, direction, location, userType]); // ESTA ES LA ÚNICA CIERRE QUE NECESITAS
   
 
   // =============================== //
@@ -778,14 +876,14 @@ useEffect(() => {
   // Movimiento vertical suave
   // =============================== //
   const animateGroundYTo = (targetY, onFinish) => {
-    isAnimatingVerticalRef.current = true; // ← 🔒 indicar que está animando
+    isAnimatingVerticalRef.current = true; //  indicar que está animando
   
     const interval = setInterval(() => {
       setGroundY((prev) => {
         const diff = targetY - prev;
         if (Math.abs(diff) < 3) {
           clearInterval(interval);
-          isAnimatingVerticalRef.current = false; // ← 🔓 terminó animación
+          isAnimatingVerticalRef.current = false; //  terminó animación
           onFinish?.();
           return targetY;
         }
@@ -795,7 +893,8 @@ useEffect(() => {
   };
   
   
-
+  //importante en todas los movimientos
+  //important
   const shouldFlip = (sprite) => {
     if (!sprite) return false;
   
@@ -834,16 +933,17 @@ const isBigSignup = isSignup && !userType;
   ref={characterRef}
   src={falling ? `${fallFrames[fallFrame]}` : currentSprite}
   alt="pixel character"
+  className={isBigSignup ? "jetpack-float" : ""}
   style={{
     position: "absolute",
-    left: position.x,
+    left: location.pathname === "/signup" ? position.x - 60 : position.x,
     top: falling ? groundY + fallOffset : groundY,
     transform: `
       translateX(-50%)
       ${isFlipped ? " scaleX(-1)" : ""}
       ${
         location.pathname === "/signup"
-          ? " scale(2.3)" // 👉 SOLO en /signup lo agrandamos
+          ? " scale(2.3)"
           : falling
           ? ""
           : location.pathname.startsWith("/projects/")
@@ -855,30 +955,24 @@ const isBigSignup = isSignup && !userType;
           : ""
       }
     `,
-    //Si ta se escogio un usertype, volvera  a su tamaño original
-    width:
-  location.pathname === "/signup"
-    ? userType
-      ? 32  // ✅ pequeño si ya eligió
-      : 180 // ✅ grande si no ha elegido
-    : 64,   // ✅ tamaño normal en dashboard y otras rutas
-
-height:
-  location.pathname === "/signup"
-    ? userType
-      ? 32
-      : 180
-    : 64,
-
-  
-  
-  
+    width: location.pathname === "/signup"
+      ? userType
+        ? 32
+        : 180
+      : 64,
+    height: location.pathname === "/signup"
+      ? userType
+        ? 32
+        : 180
+      : 64,
     objectFit: "contain",
     imageRendering: "pixelated",
     pointerEvents: "none",
     zIndex: 10,
   }}
 />
+
+
 
 
 

@@ -286,3 +286,62 @@
   align-items: center;
   gap: 0.4rem;
 }
+
+
+
+
+.perfil-card.glass {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 30px;
+  padding: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.8s ease both;
+}
+
+.perfil-divider {
+  border: none;
+  height: 1px;
+  background: rgba(100, 116, 139, 0.1);
+  margin: 1.5rem 0;
+}
+
+.perfil-avatar-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 5px rgba(96, 165, 250, 0.2);
+}
+
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.perfil-skill-tag {
+  background-color: #e0e7ff;
+  color: #1e40af;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.perfil-skill-tag:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

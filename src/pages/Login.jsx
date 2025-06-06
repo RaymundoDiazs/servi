@@ -1,14 +1,12 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SessionContext } from "../Contexts/SessionContext";
-import { UserIdContext } from "../Contexts/UserIdContext";
 import './Login.css';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { setSessionType } = useContext(SessionContext);
-  const { setUserId } = useContext(UserIdContext)
   const navigate = useNavigate();
 
   const [mensaje, setMensaje] = useState(null)
@@ -58,11 +56,6 @@ export default function Login() {
       if (data.tipo) {
         console.log(data.tipo)
         setSessionType(data.tipo);
-        if (data.tipo === "alumno") {
-          setUserId({"user_id": data.user_id, "special_id": data.info.alumno_id})
-        } else if (data.tipo === "osf") {
-          setUserId({"user_id": data.user_id, "special_id": data.info.osf_id})
-        }
         navigate('/');
 
       }
@@ -88,11 +81,24 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      {/*pt izquierda */}
-      <div className="login-left">
-        <img src="/logoservicio.png" alt="Logo Servicio" className="service-logo" />
-        <p className="service-text">¿Listo para registrar un proyecto?</p>
-      </div>
+  {/* pt izquierda */}
+<div className="login-left">
+  <div className="bubbles-bg">
+    <div className="bubble bubble1"></div>
+    <div className="bubble bubble2"></div>
+    <div className="bubble bubble3"></div>
+    <div className="bubble bubble4"></div>
+    <div className="bubble bubble5"></div>
+    <div className="bubble bubble6"></div>
+  </div>
+  <img src="/logoservicio.png" alt="Logo Servicio" className="service-logo" />
+  <p className="service-text">¿Listo para registrar un proyecto?</p>
+</div>
+
+  
+
+
+
 
 
       {/*pt derecha*/}

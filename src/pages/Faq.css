@@ -1,0 +1,134 @@
+.faq-container {
+  padding: 4rem 2rem;
+  background: linear-gradient(to bottom right, #f0f4f8, #e0e7ff);
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.faq-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.faq-subtitle {
+  font-size: 1.1rem;
+  color: #475569;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.faq-list {
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.faq-item.glass {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s;
+}
+
+.faq-item.glass:hover {
+  transform: scale(1.01);
+}
+
+.faq-pregunta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #1e40af;
+}
+
+.faq-pregunta h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.faq-icon {
+  font-size: 1.3rem;
+  transition: transform 0.3s ease;
+}
+
+.faq-item.activo .faq-icon {
+  transform: rotate(180deg);
+}
+
+.faq-respuesta {
+  overflow: hidden;
+  transition: all 0.4s ease;
+  padding-top: 0.8rem;
+}
+
+.faq-respuesta p {
+  font-size: 0.95rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+}
+
+
+
+/*buscador*/
+
+.faq-buscador {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+.faq-buscador input {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 2.5rem;
+  font-size: 1rem;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  transition: border 0.2s ease;
+}
+
+.faq-buscador input:focus {
+  border-color: #1e3a8a;
+}
+
+.faq-buscador-icon {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 1.2rem;
+}
+
+.faq-no-results {
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+}
+
+
+mark {
+  background-color: #fde68a;
+  color: #1e293b;
+  padding: 0 0.2rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+

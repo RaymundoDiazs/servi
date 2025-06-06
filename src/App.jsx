@@ -25,6 +25,12 @@ import { UserIdProvider } from "./Contexts/UserIdContext.jsx";
 import Test from "./pages/Test.jsx";
 import "./App.css";
 
+import Perfil_usuario from './pages/Perfil_usuario';
+
+import Acerca_de from './pages/Acerca_de.jsx';
+import Faq from './pages/Faq.jsx';
+
+
 
 // CREO QUE TODO LO QUE ESTÁ ABAJO SE ORIGINÓ DE ALGÚN MERGE RARO, NO SE USA
 //  -Alonso
@@ -135,6 +141,13 @@ export default function App() {
                 <MainLayout> <Projects vP={true} /> </MainLayout> 
               </ProtectedRoute>
              } />
+
+
+               {/* NUEVA RUTA DEL PERFIL (Header) */}
+  <Route path="/perfil_usuario" element={ <MainLayout> <Perfil_usuario /> </MainLayout> } />
+   {/* ✅ NUEVA RUTA DEL PERFIL */}
+  <Route path="/acerca_de" element={ <MainLayout> <Acerca_de /> </MainLayout> } />
+    <Route path="/faq" element={ <MainLayout> <Faq /> </MainLayout> } />
             
             {/* Rutas públicas sin layout */}
             <Route path="/login" element={<Login />} />
