@@ -8,6 +8,11 @@ const Export = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const sheetLinks = {
+    nacional: "https://docs.google.com/spreadsheets/d/1lMG8Gk2_RUWxE94hqO-d57jLc6iLqf7tWgJ5YrqhhMQ/edit#gid=0",
+    programacion: "https://docs.google.com/spreadsheets/d/1lMG8Gk2_RUWxE94hqO-d57jLc6iLqf7tWgJ5YrqhhMQ/edit#gid=1895685579" // Replace with actual GID for Programación
+  };
+
   const handleExport = async (endpoint) => {
     setLoading(true);
     setError(null);
@@ -24,6 +29,10 @@ const Export = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(sheetLinks[activeTab]);
   };
 
   return (
@@ -54,15 +63,30 @@ const Export = () => {
         </button>
       </div>
 
-      <button
-        className="export-btn primary"
-        onClick={() =>
-          handleExport(activeTab === "nacional" ? "export" : "export-programacion")
-        }
-        disabled={loading}
-      >
-        {loading ? "Exportando..." : "Exportar a Google Sheets"}
-      </button>
+      <div className="export-actions">
+        <button
+          className="export-btn primary"
+          onClick={() =>
+            handleExport(activeTab === "nacional" ? "export" : "export-programacion")
+          }
+          disabled={loading}
+        >
+          {loading ? "Exportando..." : "Exportar a Google Sheets"}
+        </button>
+
+        <button className="export-btn secondary" onClick={handleCopyLink}>
+          <FiCopy /> Copiar enlace
+        </button>
+
+        <a
+          className="export-btn secondary"
+          href={sheetLinks[activeTab]}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FiExternalLink /> Abrir hoja
+        </a>
+      </div>
 
       {error && <p className="export-error">❌ {error}</p>}
 
@@ -70,7 +94,6 @@ const Export = () => {
         <div className="export-summary">
           <p>✅ {exportInfo.message}</p>
           <p><strong>Proyectos exportados:</strong> {exportInfo.totalProjects}</p>
-
           {exportInfo.periods && (
             <p><strong>Resumen de periodos:</strong> {exportInfo.periods.join(", ")}</p>
           )}
