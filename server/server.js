@@ -1233,7 +1233,7 @@ app.post('/sheets/export-programacion', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Error exporting to Programación sheet:', error);
+    console.error('Error exporting to Programación sheet:', error);
     res.status(500).json({ error: 'Failed to export to Programación sheet' });
   }
 });
@@ -1245,7 +1245,9 @@ app.post('/users/alumnoNuevo', upload.none(), async function(req, res){
     await db.none("CALL registrar_alumno($1, $2, $3, $4, $5);", [matricula, carrera, nombre, numero, password]);
 
     const email = `${matricula}@tec.mx`;
-    await sendWelcomeEmail(email, nombre);
+    subject = 'Bienvenido al Programa de Proyectos Solidarios';
+    content = `Hola ${nombre}, \n\n¡Bienvenido! Tu registro fue exitoso.\n\nSaludos,\nEquipo de Soporte`
+    await sendEmail(email, nombre, subject, content);
     // await sendWelcomeEmail('dextroc346.d3@gmail.com', nombre);
 
     res.status(200).send('Usuario creado y correo enviado');
