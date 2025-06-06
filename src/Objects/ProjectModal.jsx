@@ -74,6 +74,7 @@ const [editedCompetencias, setEditedCompetencias] = useState(proyecto.competenci
 const [editedDireccion, setEditedDireccion] = useState(proyecto.direccion);
 
 const [editedCupo, setEditedCupo] = useState(proyecto.cantidad);
+console.log("hola edited", proyecto.cantidad)
 
 
 

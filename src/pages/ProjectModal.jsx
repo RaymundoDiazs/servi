@@ -88,7 +88,8 @@ const ProjectModal = ({ proyecto, onClose, proyectosDisponibles, pos = false }) 
   const [editedCompetencias, setEditedCompetencias] = useState(proyecto.competencias);
   const [editedDireccion, setEditedDireccion] = useState(proyecto.direccion);
 
-  const [editedCupo, setEditedCupo] = useState(proyecto.cantidad);
+  const [editedCupo, setEditedCupo] = useState(proyecto.cupo);
+  console.log("hola edited", proyecto.cupo)
 
 
 

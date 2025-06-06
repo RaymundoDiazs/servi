@@ -48,7 +48,7 @@ const NewProject = () => {
         enlace_maps: '', 
         valor_promueve: '',
         surgio_unidad_de_formacion: '',
-        pregunta_descarte: '',
+        pregunta_descarte: null,
         notificaciones: '', // notifiación sobre cuando alguien se postule
 
         momentos: {},
@@ -288,29 +288,29 @@ const NewProject = () => {
                 <div className="form-group nombre-coordinador">
                     <label htmlFor="nombre_coordinador">Nombre de la persona que coordinará el Proyecto Solidario.
 (Nombre, correo y puesto)</label>
-                    <input type="text" name="nombre_coordinador" value={projectForm.nombre_coordinador} onChange={handleFormChange} />
+                    <input type="text" name="nombre_coordinador" value={projectForm.nombre_coordinador} onChange={handleFormChange} required />
                 </div>
                 <div className="form-group numero-coordinador">
                     <label htmlFor="numero_coordinador">Número telefónico de la persona que coordinará el Servicio Social (para integrarle al grupo de WhatsApp)</label>
-                    <input type="text" name="numero_coordinador" value={projectForm.numero_coordinador} onChange={handleFormChange} />
+                    <input type="text" name="numero_coordinador" value={projectForm.numero_coordinador} onChange={handleFormChange} required />
                 </div>
 
                 <div className="form-group nombre-proyecto">
                     <label htmlFor="nombre">Nombre del Proyecto Solidario</label>
                     <p>El nombre debe ser corto, atractivo y descriptivo para el estudiante</p>
-                    <input type="text" name="nombre" value={projectForm.nombre} onChange={handleFormChange} />
+                    <input type="text" name="nombre" value={projectForm.nombre} onChange={handleFormChange} required />
 
                 </div>
 
                 <div className="form-group problema-social">
                     <label htmlFor="problema_social">Describa el problema social específico que atenderá el estudiantado</label>
                     <p>En caso de que tenga datos estadísticos que le dieron la pauta a este Proyecto Solidario te pedimos los agregues aquí. </p>
-                    <textarea name="problema_social" value={projectForm.problema_social} onChange={handleFormChange} />
+                    <textarea name="problema_social" value={projectForm.problema_social} onChange={handleFormChange} required />
                 </div>
 
                 <div className="form-group tipo-vulnerabilidad">
                     <label htmlFor="tipo_vulnerabilidad">Tipo de vulnerabilidad que atenderá este proyecto</label>
-                <input type="text" name="tipo_vulnerabilidad" value={projectForm.tipo_vulnerabilidad} onChange={handleFormChange} />    
+                <input type="text" name="tipo_vulnerabilidad" value={projectForm.tipo_vulnerabilidad} onChange={handleFormChange} required />
                 </div>
 
                 <div className="form-group rango-edad">
@@ -325,6 +325,7 @@ const NewProject = () => {
                         max={100}
                         step={1}
                         sx={{ color: '#0052CC' }}
+                        required
                     />
                     <p>De {projectForm.rango_edad[0]} a {projectForm.rango_edad[1]} años</p>
                 </div>
@@ -332,20 +333,24 @@ const NewProject = () => {
                 <div className="form-group zona">
                     <label htmlFor="zona">Zona a la que pertenece el proyecto</label> <br />
                     <div className="radio-group">
-                        <input type="radio" name="zona" value="Rural" onChange={handleFormChange} /> Rural
-                        <input type="radio" name="zona" value="Urbana" onChange={handleFormChange} /> Urbana
+                        <label>
+                            <input type="radio" name="zona" value="Rural" onChange={handleFormChange} required /> Rural
+                        </label>
+                        <label>
+                            <input type="radio" name="zona" value="Urbana" onChange={handleFormChange} required /> Urbana
+                        </label>
                     </div>
                 </div>
 
                 <div className="form-group num-beneficiarios">
                     <label htmlFor="num_beneficiarios">Número aproximado de beneficiarios que estarán en contacto con el estudiantado o que se verán beneficiados durante la realización de ESTE Proyecto solidario</label>
-                    <input type="number" name="num_beneficiarios" value={projectForm.num_beneficiarios} onChange={handleFormChange} />
+                    <input type="number" name="num_beneficiarios" value={projectForm.num_beneficiarios} onChange={handleFormChange} required />
                 </div>
                 
                 <div className="form-group objetivo-general">
                     <label htmlFor="objetivo_general">Objetivo General del Proyecto Solidario</label>
                     <p>(El objetivo es el cambio deseado que se quiere lograr con el proyecto solidario)</p>
-                    <input type="text" name="objetivo_general" value={projectForm.objetivo_general} onChange={handleFormChange} />
+                    <input type="text" name="objetivo_general" value={projectForm.objetivo_general} onChange={handleFormChange} required />
                 </div>
 
                 <div className="form-group ods-section">
@@ -354,7 +359,7 @@ const NewProject = () => {
                         {odsList.map((ods) => (
                             <div key={ods.ods_id} className="checkbox-item">
                                 <label>
-                                    <input type="checkbox" name="ods" value={ods.ods_id} onChange={handleOdsChange}/>
+                                    <input type="checkbox" name="ods" value={ods.ods_id} onChange={handleOdsChange} required={odsSelect.length < 2} />
                                     {ods.nombre}
                                 </label> <br />
                             </div>
@@ -372,17 +377,17 @@ const NewProject = () => {
                     3.- Actividad principal 3 <br />
                     Recuerde que estas, deben propiciar la convivencia entre la organización, los beneficiarios y el estudiante y deben ser en pro de la atención a una necesidad social.
                     </p>
-                    <textarea name="lista_actividades_alumnos" value={projectForm.lista_actividades_alumnos} onChange={handleFormChange} />
+                    <textarea name="lista_actividades_alumnos" value={projectForm.lista_actividades_alumnos} onChange={handleFormChange} required />
                 </div>
 
                 <div className="form-group producto-entregar">
                     <label htmlFor="producto_a_entregar">Producto o Servicio a entregar. <br />(Máximo 30 caracteres)</label>
-                    <input type="text" name="producto_a_entregar" value={projectForm.producto_a_entregar} onChange={handleFormChange}/>
+                    <input type="text" name="producto_a_entregar" value={projectForm.producto_a_entregar} onChange={handleFormChange} required/>
                 </div>
 
                 <div className="form-group entregable-desc">
                     <label htmlFor="entregable_desc"> Mencione y describa el entregable que se espera que realice el estudiantado para la OSF Producto, Servicio o Resultado del Servicio. (Máximo 200 caracteres) </label> <br />
-                    <textarea name="entregable_desc" value={projectForm.entregable_desc} onChange={handleFormChange}></textarea>
+                    <textarea name="entregable_desc" value={projectForm.entregable_desc} onChange={handleFormChange} required></textarea>
                 </div>
 
                 <div className="form-group impacto-social">
@@ -390,7 +395,7 @@ const NewProject = () => {
 (Por ejemplo: número de personas
 beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
 </label><br />
-                    <input type="text" name="medida_impacto_social" value={projectForm.medida_impacto_social} onChange={handleFormChange} />
+                    <input type="text" name="medida_impacto_social" value={projectForm.medida_impacto_social} onChange={handleFormChange} required />
                 </div>
 
                 <div className="periodos-section">
@@ -428,6 +433,7 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                                                     target: { ...e.target, value: parsedValue }
                                                 });
                                             }}
+                                            
                                         />
                                         PERIODO {info.momento} - HASTA {info.horas} Hrs - Del {fechaHumana(info.fecha_inicio)} al {fechaHumana(info.fecha_final)}
                                     </label> <br />
@@ -445,7 +451,7 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                                                     ...projectForm,
                                                     momentos: newMomentos
                                                 })
-                                            }} />
+                                            }} required />
                                         </div>
                                     ) }
                                 </div>
@@ -461,7 +467,7 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                         {carreras.map((carrera) => (
                             <div key={carrera.carrera_id} className="checkbox-item">
                                 <label htmlFor={`carrera-${carrera.carrera_id}`}>
-                                    <input type="checkbox" name="carrera" id={`carrera-${carrera.carrera_id}`} onChange={handleCarrerasChange} value={carrera.carrera_id} />
+                                    <input type="checkbox" name="carrera" id={`carrera-${carrera.carrera_id}`} onChange={handleCarrerasChange} value={carrera.carrera_id} required={carrerasSelect.length < 1} />
                                     {carrera.nombre_completo} {`(${carrera.nombre})`}
                                 </label>
                             </div>
@@ -471,24 +477,24 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
 
                 <div className="form-group competencias-section">
                     <label htmlFor="competencias">Habilidades o competencias que el alumno requiere para participar en el proyecto:</label> <br />
-                    <textarea value={projectForm.competencias} onChange={handleFormChange} name="competencias"/>
+                    <textarea value={projectForm.competencias} onChange={handleFormChange} name="competencias" required/>
                 </div>
 
             <div className="modalidad-section">
                 <label htmlFor="modalidad">Modalidad en que se llevará a cabo el proyecto solidario: </label> <br />
                 <div className="radio-group">
                     <label>
-                    <input type="radio" value={'en linea'} name="modalidad" onChange={handleFormChange} />
+                    <input type="radio" value={'en linea'} name="modalidad" onChange={handleFormChange} required />
                     En línea (Se verificará la posibilidad de autorización)
                     </label> <br />
                     
                     <label>
-                    <input type="radio" value={'mixto'} name="modalidad" onChange={handleFormChange} />
+                    <input type="radio" value={'mixto'} name="modalidad" onChange={handleFormChange} required />
                     Mixto (70% actividades presenciales, 30% actividades remotas)
                     </label> <br />
 
                     <label>
-                    <input type="radio" value={'presencial'} name="modalidad" onChange={handleFormChange} />
+                    <input type="radio" value={'presencial'} name="modalidad" onChange={handleFormChange} required />
                     Presencial (100% presencial)
                     </label>
                 </div>
@@ -508,18 +514,18 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                     <strong>Matutino:</strong> entre 9:00 am y 2:00 pm <br />
                     <strong>Vespertino:</strong> entre 2:00 pm y 5:00 pm
                     </p>
-                    <textarea name="modalidad_desc" id="modalidad_desc" value={projectForm.modalidad_desc} onChange={handleFormChange} ></textarea>
+                    <textarea name="modalidad_desc" id="modalidad_desc" value={projectForm.modalidad_desc} onChange={handleFormChange} required ></textarea>
                 </div>
 
                 {(projectForm.modalidad !== 'en linea' && projectForm.modalidad !== '' )  && (
                     <>
                         <div className="form-group direccion-section">
                             <label htmlFor="direccion"> <strong> DIRECCIÓN ESCRITA en donde trabajará el estudiantado </strong> (sólo para actividades PRESENCIALES o MIXTAS):</label> <br />
-                            <input type="text" name="direccion" id="direccion" value={projectForm.direccion} onChange={handleFormChange} />
+                            <input type="text" name="direccion" id="direccion" value={projectForm.direccion} onChange={handleFormChange} required />
                         </div>         
                         <div className="form-group enlace-maps-section">
                             <label htmlFor="enlace_maps">ENLACE DE MAPS en donde trabajará el estudiantado:</label> <br />
-                            <input type="enlace_maps" name="enlace_maps" id="enlace_maps" value={projectForm.enlace_maps} onChange={handleFormChange} />
+                            <input type="enlace_maps" name="enlace_maps" id="enlace_maps" value={projectForm.enlace_maps} onChange={handleFormChange} required />
                         </div>
                     </>
                 )}
@@ -528,19 +534,19 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                     <label htmlFor="valor_promueve">Valor o actitud que promueve en el estudiantado con las acciones a llevar a cabo:</label> <br />
                     <div className="radio-group">
                         <label>
-                            <input type="radio" value={'Empatia'} name="valor_promueve" onChange={handleFormChange} />
+                            <input type="radio" value={'Empatia'} name="valor_promueve" onChange={handleFormChange} required />
                             Empatia | Es sensible ante la vulnerabilidad, el dolor y el sufrimiento del otro y actúa con el fin de eliminarlo, aliviarlo o evitarlo, a través de acciones justas alejadas de la pasión egoísta y/o de sentimientos de superioridad.
                         </label> <br />
                         <label>
-                            <input type="radio" value={'Compromiso'} name="valor_promueve" onChange={handleFormChange} />
+                            <input type="radio" value={'Compromiso'} name="valor_promueve" onChange={handleFormChange} required />
                             Compromiso | Actúa con responsabilidad, con el fin de asegurar el bienestar de la colectividad, a través de acciones que garantizan el acceso a los derechos humanos, el empoderamiento de los ciudadanos y de las comunidades, así como el cuidado, mantenimiento y uso sostenible de los recursos y bienes comunes.
                         </label> <br />
                         <label>
-                            <input type="radio" value={'Tolerancia'} name="valor_promueve" onChange={handleFormChange} />
+                            <input type="radio" value={'Tolerancia'} name="valor_promueve" onChange={handleFormChange} required />
                             Tolerancia | Actúa con respeto ante la diversidad de género, sexual, étnica, cultural, de capacidades, generacional, religiosa y socioeconómica mostrando una cordial aceptación de las diferencias y la capacidad para gestionar de manera razonable los conflictos.
                         </label> <br />
                         <label>
-                            <input type="radio" value={'Participación ciudadana'} name="valor_promueve" onChange={handleFormChange} />
+                            <input type="radio" value={'Participación ciudadana'} name="valor_promueve" onChange={handleFormChange} required />
                             Participación ciudadana | Promueve la solución cooperativa de problemas y la coordinación de acciones colectivas con el fin de mejorar la calidad de vida de la sociedad, fomentar la cultura de la legalidad, los derechos humanos y/o el fortalecimiento de la democracia.
                         </label>
                     </div>
@@ -550,17 +556,17 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                     <label htmlFor="surgio_unidad_de_formacion"><strong>¿El Proyecto Solidario surgión de una propuesta de unidad de formación?</strong></label><br />
                     <div className="radio-group">
                         <label>
-                            <input type="radio" value={'sí, SI'} name="surgio_unidad_de_formacion" onChange={handleFormChange}/>
+                            <input type="radio" value={'sí, SI'} name="surgio_unidad_de_formacion" onChange={handleFormChange} required/>
                             Si, de una Semana de Inducción
                         </label> <br />
 
                         <label>
-                            <input type="radio" value={'sí, SSH'} name="surgio_unidad_de_formacion" onChange={handleFormChange}/>
+                            <input type="radio" value={'sí, SSH'} name="surgio_unidad_de_formacion" onChange={handleFormChange} required/>
                             Si, de una Semana con Sentido Humano
                         </label> <br />
 
                         <label>
-                            <input type="radio" value={'no'} name="surgio_unidad_de_formacion" onChange={handleFormChange}/>
+                            <input type="radio" value={'no'} name="surgio_unidad_de_formacion" onChange={handleFormChange} required/>
                             Ninguna de las anteriores
                         </label>
                     </div>
@@ -573,14 +579,18 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                         <label>
                             <input type="radio" name="pregunta_select" value={true} onChange={e =>{
                                 setPreguntaSelect(true)
-                            }} />
+                            }} required />
                             Sí, busco un perfil muy específico y requiero revisar perfiles
                         </label> <br />
 
                         <label>
-                            <input type="radio" name="pregunta_select" value={false} onChange={e =>{
-                                setPreguntaSelect(false)
-                            }} />
+                            <input type="radio" name="pregunta_select" value={false} onChange={() => {
+                                setPreguntaSelect(false);
+                                setProjectForm(prev => ({
+                                    ...prev,
+                                    pregunta_descarte: null
+                                }));
+                            }} required />
                             No, el proyecto puede recibir diferentes perfiles. No es necesario verificar perfiles
                         </label>
                     </div>
@@ -594,17 +604,17 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                                 Esta pregunta tiene la intención de facilitar la elección del alumno, para una posible entrevista. <br />
                                 <strong>Sugerimos preguntas que requieran una respuesta abierta</strong> para identificar el interés de participar en el proyecto.
                             </p>
-                            <input type="text" name="pregunta_descarte" id="pregunta_descarte" value={projectForm.pregunta_descarte} onChange={handleFormChange} />
+                            <input type="text" name="pregunta_descarte" id="pregunta_descarte" value={projectForm.pregunta_descarte} onChange={handleFormChange} required />
                         </div>
                         <div className="notificaciones-section">
                             <label htmlFor="notificaciones">Coméntanos si <strong>deseas recibir notificaciones en tu correo cuando alguien se postule.</strong></label><br />
                             <div className="radio-group">
                                 <label>
-                                    <input type="radio" name="notificaciones" value={true} onChange={handleFormChange} />
+                                    <input type="radio" name="notificaciones" value={true} onChange={handleFormChange} required />
                                     SI requiero recibir notificaciones cuando un alumnx se postule.
                                 </label><br />
                                 <label>
-                                    <input type="radio" name="notificaciones" value={false} onChange={handleFormChange} />
+                                    <input type="radio" name="notificaciones" value={false} onChange={handleFormChange} required />
                                     NO requiero recibir notificaciones.
                                 </label> <br />
                             </div>
@@ -616,7 +626,7 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                     <label htmlFor="terminos1"><strong>Es de mi conocimiento que los horarios para los alumnos de S.S. pueden ser variables debido a su horario académico cambiante cada 5 semanas.</strong></label><br />
                     <div className="radio-group">
                         <label>
-                            <input type="radio"  />
+                            <input type="radio" required />
                             Notifico de enteradx que  en PERIODOS SEMESTRALES el horario académico CAMBIA CADA 5 SEMANAS
                         </label>
                     </div>
@@ -632,7 +642,7 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
                     </p>
                     <div className="radio-group">
                         <label>
-                            <input type="radio"  />
+                            <input type="radio" required />
                             Me comprometo
                         </label>
                     </div>
@@ -641,8 +651,8 @@ beneficiadas, cambio esperado en la comunidad, antes y después, etc.)
 
             <button type="submit" className="submit-btn">Create Project</button>
             </form>
-            {/* <button onClick={test}>test</button>
-            <button onClick={test2}>test2</button> */}
+            <button onClick={test}>test</button>
+            <button onClick={test2}>test2</button>
         </div>
     );
 };

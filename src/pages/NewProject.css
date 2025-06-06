@@ -140,4 +140,45 @@
   box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
 }
 
+.project-form .form-group,
+.project-form .periodos-section > div,
+.project-form .carreras-section,
+.project-form .modalidad-section,
+.project-form .valor-promueve-section,
+.project-form .surgio-unidad-formacion-section,
+.project-form .pregunta-section,
+.project-form .pregunta-descarte-section,
+.project-form .notificaciones-section,
+.project-form .terminos-section {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 1.5rem 1.5rem 1.2rem 1.5rem;
+  margin-bottom: 2rem;
+  border: 1.5px solid #e5e7eb;
+  transition: box-shadow 0.2s;
+}
+
+.project-form .form-group:hover,
+.project-form .periodos-section > div:hover,
+.project-form .carreras-section:hover,
+.project-form .modalidad-section:hover,
+.project-form .valor-promueve-section:hover,
+.project-form .surgio-unidad-formacion-section:hover,
+.project-form .pregunta-section:hover,
+.project-form .pregunta-descarte-section:hover,
+.project-form .notificaciones-section:hover,
+.project-form .terminos-section:hover {
+  box-shadow: 0 6px 24px rgba(59,130,246,0.10);
+  border-color: #3b82f6;
+}
+
+/* Ajuste para que los títulos de cada pregunta sean más notorios */
+.project-form label {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
 

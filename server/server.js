@@ -37,9 +37,9 @@ const pgp = require('pg-promise')();
 const cn = {
     host: 'localhost',
     port: 5432,
-    database: 'serviv11',
+    database: 'servi',
     user: 'postgres',
-    password: '3166',
+    password: 'postgres',
     allowExitOnIdle: true
 }
 const db = pgp(cn);
@@ -838,7 +838,7 @@ app.put('/api/proyectos/:id/detalles', async (req, res) => {
       zona, tipo_vulnerabilidad, numero_beneficiarios, producto_a_entregar,
       medida_impacto_social, competencias, direccion, carreras, enlace_maps,
       problema_social, valor_promueve, rango_edad,
-      lista_actividades_alumno, modalidad_desc, pregunta_descarte,
+      lista_actividades_alumno, modalidad_desc,
       objetivo_general, estado, cantidad,
     } = req.body;
 
@@ -862,16 +862,15 @@ app.put('/api/proyectos/:id/detalles', async (req, res) => {
           rango_edad = int4range($11, $11 + 1),
           lista_actividades_alumno = $12,
           modalidad_desc = $13,
-          pregunta_descarte = $14,
-          objetivo_general = $15,
-          estado = $16,
-          cantidad = $17
+          objetivo_general = $14,
+          estado = $15,
+          cantidad = $16
         WHERE proyecto_id = $17
       `, [
         zona, tipo_vulnerabilidad, numero_beneficiarios, producto_a_entregar,
         medida_impacto_social, competencias, direccion, enlace_maps,
         problema_social, valor_promueve, rango_edad,
-        lista_actividades_alumno, modalidad_desc, pregunta_descarte,
+        lista_actividades_alumno, modalidad_desc,
         objetivo_general, estado,cantidad ,proyectoId
       ]);
 
