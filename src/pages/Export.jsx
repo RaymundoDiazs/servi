@@ -10,7 +10,7 @@ const Export = () => {
 
   const sheetLinks = {
     nacional: "https://docs.google.com/spreadsheets/d/1lMG8Gk2_RUWxE94hqO-d57jLc6iLqf7tWgJ5YrqhhMQ/edit#gid=0",
-    programacion: "https://docs.google.com/spreadsheets/d/1lMG8Gk2_RUWxE94hqO-d57jLc6iLqf7tWgJ5YrqhhMQ/edit#gid=1895685579" // Replace with actual GID for Programación
+    programacion: "https://docs.google.com/spreadsheets/d/1lMG8Gk2_RUWxE94hqO-d57jLc6iLqf7tWgJ5YrqhhMQ/edit#gid=1895685579" 
   };
 
   const handleExport = async (endpoint) => {
