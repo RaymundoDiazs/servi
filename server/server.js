@@ -18,7 +18,7 @@ const fs = require('fs');
 // const { sendWelcomeEmail } = require('./emailService');
 
 // Needed for the endpoints to work with Gmail API
-const { sendWelcomeEmail } = require('./gmailService');
+const { sendEmail } = require('./gmailService');
 const e = require('express');
 const { Upload } = require('@mui/icons-material');
 
