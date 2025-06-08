@@ -49,4 +49,17 @@ async function sendEmail(to, name, subject, content) {
   });
 }
 
-module.exports = { sendEmail };
+function buildRawEmail(to, subject, content) {
+  const emailLines = [
+    `To: ${to}`,
+    'Subject: =?UTF-8?B?' + Buffer.from(subject).toString('base64') + '?=',
+    'Content-Type: text/plain; charset="UTF-8"',
+    'Content-Transfer-Encoding: 7bit',
+    '',
+    content
+  ];
+  const email = emailLines.join('\n');
+  return Buffer.from(email).toString('base64').replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+module.exports = { sendEmail, buildRawEmail };
